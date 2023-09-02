@@ -1,0 +1,12 @@
+create_tags: patch
+develop: main
+do_version_commit: false
+git_root:  .
+master: main
+patch_prefix: .
+preserve_patch_zero: true
+push_develop:  no
+push_master: true
+push_tags: true
+remote:  origin
+info_file: app.php
