@@ -23,7 +23,7 @@ php -v
 * Temporarily modifies `$PATH` so that the requested PHP is used.
 * Runs `composer update` so that dependencies are updated for the correct PHP version.
 * Runs the given executable, which can be a command or a script path
-* Restores the original PHP version and runs `composer update` once again to restore dependencies as well.
+* Restores the original PHP version and runs `composer update` once again to restore the original dependencies.
 
 ## Dependencies
 
@@ -50,3 +50,7 @@ Here is a pattern you can use to run PhpUnit under PHP 7.1, 7.4 and 8.1.
 ./vendor/bin/phpswap use 7.4 './vendor/bin/phpunit -c phpunit.xml'
 ./vendor/bin/phpswap use 8.1 './vendor/bin/phpunit -c phpunit.xml'
 ```
+
+## Contributing
+
+If you find this project useful... please [donate](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4E5KZHDQCEUV8&item_name=Contribution%20to%20aklump%2Fphpswap).
