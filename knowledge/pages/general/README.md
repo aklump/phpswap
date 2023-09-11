@@ -55,3 +55,28 @@ Here is a pattern you can use to run PhpUnit under PHP 7.1, 7.4 and 8.1.
 ./vendor/bin/phpswap use 7.4 './vendor/bin/phpunit -c phpunit.xml'
 ./vendor/bin/phpswap use 8.1 './vendor/bin/phpunit -c phpunit.xml'
 ```
+
+## CLI Options
+
+### `-v`
+
+In verbose mode you will see the Composer output.
+
+### `--no-composer-restore`
+
+**Use this option to save time** if restoring the Composer dependencies is not necessary. In the PhpUnit examples above, it is not necessary to restore the dependences after running against PHP 7.1, because the next line will install the dependencies necessary for testing against PHP 7.4. So if used the above example looks like this:
+
+```shell
+```shell
+./vendor/bin/phpswap use 7.1 --no-composer-restore './vendor/bin/phpunit -c phpunit.xml'
+./vendor/bin/phpswap use 7.4 --no-composer-restore './vendor/bin/phpunit -c phpunit.xml'
+./vendor/bin/phpswap use 8.1 './vendor/bin/phpunit -c phpunit.xml'
+```
+
+When this option used, a file called _composer.lock.phpswap_ will remain in your project. It contains a copy of the _composer.lock_ file that was in your project before the first swap command. This file is used to replace _composer.lock_ at the end of a swap **without** the `--no-composer-restore` option.  However when using this option it remains.
+
+To quickly resolve this you can do something like `./vendor/bin/phpswap use 7.4 "echo"`  The PHP version is irrelevant in this case.
+
+## Troubleshooting
+
+If you try to run a command and see "Composer detected issues in your platform:", then try running `composer update` first.
