@@ -9,7 +9,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 $app = new Application();
 $app->setName('phpswap');
-$app->setVersion('0.0.0');
+$app->setVersion('0.0.1');
 $app->add(new ListCommand());
 $app->add(new ExecuteCommand());
 $app->run();
