@@ -33,6 +33,7 @@ class ExecuteCommand extends Command {
 
     try {
       $php_binary = $provider->getBinary($version);
+      $options = 0;
       if ($output->isVerbose()) {
         $options |= Execute::VERBOSE;
       }
