@@ -71,15 +71,19 @@ Here is a pattern you can use to run PhpUnit under PHP 7.1, 7.4 and 8.1.
 
 In verbose mode you will see the Composer output.
 
-### `composer.lock.phpswap`
+### `--working-dir`
 
-During execution, a file called _composer.lock.phpswap_ is temporarily created in your project. It contains a copy of the _composer.lock_ file that was in your project before the first swap. This file is used to refresh _composer.lock_ at the end of a swap. In some error situations this file may not be deleted. To recover run the following `./vendor/bin/phpswap use 7.4 "echo"`  The PHP version is irrelevant in this case.
-
-If that doesn't work copy the contents of _composer.lock.phpswap_ over _composer.lock_ and delete _composer.lock.phpswap_.
+This sets the working directory from which your script is called.  This is optional.
 
 ## Troubleshooting
 
-If you try to run a command and see "Composer detected issues in your platform:", try running `composer install` (or `composer update`?) then repeat your command.
+During execution, a file called _composer.lock.phpswap_ is temporarily created in your project. It contains a copy of the _composer.lock_ file that was in your project before the first swap. This file is used to refresh _composer.lock_ at the end of a swap. In some error situations this file may not be deleted. Use the snippet below to recover.
+
+You may also see "Composer detected issues in your platform:" after a swap executed. The same applies here, try the snippet below.
+
+```shell
+mv composer.lock.phpswap; composer update
+```
 
 ## Controller File Example
 
