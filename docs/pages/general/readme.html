@@ -4,9 +4,9 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="/Users/aklump/Code/Packages/php/phpswap/docs/dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=0.0.2">
-      <link rel="stylesheet" href="/Users/aklump/Code/Packages/php/phpswap/docs/dist/style.css?ver=0.0.2">
-      <link rel="stylesheet" href="/Users/aklump/Code/Packages/php/phpswap/docs/dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=0.0.2">
+      <link rel="stylesheet" href="/Users/aklump/Code/Packages/php/phpswap/docs/dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=0.0.4">
+      <link rel="stylesheet" href="/Users/aklump/Code/Packages/php/phpswap/docs/dist/style.css?ver=0.0.4">
+      <link rel="stylesheet" href="/Users/aklump/Code/Packages/php/phpswap/docs/dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=0.0.4">
     <title>PHP Swap | Book</title>
 </head>
 <body class="my-5">
@@ -92,11 +92,13 @@ php -v
 <h2>CLI Options</h2>
 <h3><code>-v</code></h3>
 <p>In verbose mode you will see the Composer output.</p>
-<h3><code>composer.lock.phpswap</code></h3>
-<p>During execution, a file called <em>composer.lock.phpswap</em> is temporarily created in your project. It contains a copy of the <em>composer.lock</em> file that was in your project before the first swap. This file is used to refresh <em>composer.lock</em> at the end of a swap. In some error situations this file may not be deleted. To recover run the following <code>./vendor/bin/phpswap use 7.4 "echo"</code>  The PHP version is irrelevant in this case.</p>
-<p>If that doesn't work copy the contents of <em>composer.lock.phpswap</em> over <em>composer.lock</em> and delete <em>composer.lock.phpswap</em>.</p>
+<h3><code>--working-dir</code></h3>
+<p>This sets the working directory from which your script is called.  This is optional.</p>
 <h2>Troubleshooting</h2>
-<p>If you try to run a command and see "Composer detected issues in your platform:", try running <code>composer install</code> (or <code>composer update</code>?) then repeat your command.</p>
+<p>During execution, a file called <em>composer.lock.phpswap</em> is temporarily created in your project. It contains a copy of the <em>composer.lock</em> file that was in your project before the first swap. This file is used to refresh <em>composer.lock</em> at the end of a swap. In some error situations this file may not be deleted. Use the snippet below to recover.</p>
+<p>You may also see "Composer detected issues in your platform:" after a swap executed. The same applies here, try the snippet below.</p>
+<pre><code class="shell">mv composer.lock.phpswap; composer update
+</code></pre>
 <h2>Controller File Example</h2>
 <p>Here is a complete snippet for controlling tests. Save as _bin/run_unit<em>tests.sh</em> and call it like this: <code>bin/run_unit_tests.sh -v</code>. You may leave off the verbose <code>-v</code> flag unless troubleshooting.</p>
 <pre><code class="bash">#!/usr/bin/env bash
@@ -121,7 +123,7 @@ fi
   <footer class="footer d-flex justify-content-center">
     <div class="flex-column justify-content-center">
                   Version:
-          <strong>0.0.2</strong>
+          <strong>0.0.4</strong>
           &bull;
                 Last Update: <strong>10/8/2023</strong>
     </div>
@@ -230,9 +232,9 @@ fi
   </div>
 </div>
 
-  <script src="/Users/aklump/Code/Packages/php/phpswap/docs/dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=0.0.2"></script>
-  <script src="/Users/aklump/Code/Packages/php/phpswap/docs/dist/dist/lunr.js?ver=0.0.2"></script>
-  <script src="/Users/aklump/Code/Packages/php/phpswap/docs/dist/knowledge.min.js?ver=0.0.2"></script>
+  <script src="/Users/aklump/Code/Packages/php/phpswap/docs/dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=0.0.4"></script>
+  <script src="/Users/aklump/Code/Packages/php/phpswap/docs/dist/dist/lunr.js?ver=0.0.4"></script>
+  <script src="/Users/aklump/Code/Packages/php/phpswap/docs/dist/knowledge.min.js?ver=0.0.4"></script>
 
 </body>
 </html>
