@@ -72,12 +72,12 @@ This sets the working directory from which your script is called.  This is optio
 
 ## Troubleshooting
 
-During execution, a file called _composer.lock.phpswap_ is temporarily created in your project. It contains a copy of the _composer.lock_ file that was in your project before the first swap. This file is used to refresh _composer.lock_ at the end of a swap. In some error situations this file may not be deleted. Use the snippet below to recover.
+During execution, a file called _composer.lock.phpswap_ is temporarily created in your project. It contains a copy of the _composer.lock_ file that was in your project before the swap. This file is used to refresh _composer.lock_ at the end of a swap. In some error situations this file may not be deleted. Use the snippet below to recover.
 
 You may also see "Composer detected issues in your platform:" after a swap executed. The same applies here, try the snippet below.
 
 ```shell
-mv composer.lock.phpswap; composer update
+mv composer.lock.phpswap composer.lock;composer update
 ```
 
 ## Controller File Example

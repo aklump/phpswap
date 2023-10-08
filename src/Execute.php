@@ -2,6 +2,7 @@
 
 namespace AKlump\PhpSwap;
 
+use AKlump\PhpSwap\Command\ExecuteCommand;
 use RuntimeException;
 
 /**
@@ -9,7 +10,7 @@ use RuntimeException;
  */
 class Execute {
 
-  const VERBOSE = 4;
+  const SWAP_FILE = 'composer.lock.phpswap';
 
   private $binary;
 
@@ -17,11 +18,11 @@ class Execute {
    * @param string $binary
    * @param int $options
    *
-   * @see self::VERBOSE
+   * @see \AKlump\PhpSwap\Command\ExecuteCommand::VERBOSE
    */
-  public function __construct($binary, $options) {
-    $this->binary = $binary;
+  public function __construct($options, $binary) {
     $this->options = $options;
+    $this->binary = $binary;
   }
 
   /**
@@ -34,34 +35,28 @@ class Execute {
    */
   public function __invoke($working_dir, $command) {
     $quiet = '--quiet ';
-    if ($this->options & self::VERBOSE) {
+    if ($this->options & ExecuteCommand::VERBOSE) {
       $quiet = '';
     }
+    $swapfile = static::SWAP_FILE;
 
     $commands = [];
     $commands[] = sprintf('cd %s', $working_dir);
-
-    // Set the new PHP version and run composer update.
-    $commands[] = "STASH=\$PATH
-export PATH=$this->binary:\$PATH";
-
+    $commands[] = "export PATH=$this->binary:\$PATH";
     $commands[] = "if [ -f composer.json ]; then
-  ! [ -f composer.lock.phpswap ] || rm composer.lock.phpswap || exit 1
-  ! [ -f composer.lock ] || mv composer.lock composer.lock.phpswap || exit 1
+  ! [ -f $swapfile ] || rm $swapfile || exit 1
+  ! [ -f composer.lock ] || mv composer.lock $swapfile || exit 1
   composer update $quiet--no-interaction || exit 1;
 fi";
 
-    // Place the user's command or script right in the middle.
+    // Now include the user's command or script.
     $commands[] = $command;
-
-    // Restore composer dependencies back to original.
-    $commands[] = "if [ -f composer.lock.phpswap ]; then
-  export PATH=\$STASH
-  ! [ -f composer.lock.phpswap ] || mv composer.lock.phpswap composer.lock || exit 1
-  composer install $quiet--no-interaction || exit 1
-fi";
-
     $last_line = system(implode(' && ', $commands), $result_code);
+
+    // Note: because this is a new shell, the PHP will be back to the original.
+    $recovery = new ComposerRestore($this->options);
+    $recovery($working_dir);
+
     if ($result_code !== 0) {
       throw new RuntimeException($last_line);
     }

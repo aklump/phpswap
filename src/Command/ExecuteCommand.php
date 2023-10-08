@@ -12,6 +12,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ExecuteCommand extends Command {
 
+  const VERBOSE = 1;
+
   protected static $defaultName = 'use';
 
   protected function configure() {
@@ -35,9 +37,9 @@ class ExecuteCommand extends Command {
       $php_binary = $provider->getBinary($version);
       $options = 0;
       if ($output->isVerbose()) {
-        $options |= Execute::VERBOSE;
+        $options |= static::VERBOSE;
       }
-      $execute = new Execute($php_binary, $options);
+      $execute = new Execute($options, $php_binary);
       $lines = $execute($working_directory, $executable);
       if ($lines) {
         $output->writeln(array_map(function ($line) {
