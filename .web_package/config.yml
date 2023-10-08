@@ -1,6 +1,6 @@
 create_tags: patch
 develop: main
-do_version_commit: false
+do_version_commit: true
 git_root: .
 master: main
 patch_prefix: .

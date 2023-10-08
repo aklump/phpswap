@@ -19,8 +19,7 @@ class ExecuteCommand extends Command {
       ->setHelp('This command allows you to execute code using a specified PHP version.')
       ->addArgument('version', InputArgument::REQUIRED)
       ->addArgument('executable', InputArgument::REQUIRED)
-      ->addOption('working-dir', 'd', InputOption::VALUE_REQUIRED)
-      ->addOption('no-composer-restore', '', InputOption::VALUE_NONE);
+      ->addOption('working-dir', 'd', InputOption::VALUE_REQUIRED);
   }
 
   protected function execute(InputInterface $input, OutputInterface $output) {
@@ -34,10 +33,6 @@ class ExecuteCommand extends Command {
 
     try {
       $php_binary = $provider->getBinary($version);
-      $options = Execute::COMPOSER_UPDATE;
-      if (!$input->getOption('no-composer-restore')) {
-        $options |= Execute::COMPOSER_RESTORE;
-      }
       if ($output->isVerbose()) {
         $options |= Execute::VERBOSE;
       }

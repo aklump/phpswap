@@ -23,7 +23,7 @@ php -v
 * Temporarily modifies `$PATH` so that the requested PHP is used.
 * Runs `composer update` so that dependencies are updated for the correct PHP version.
 * Runs the given executable, which can be a command or a script path
-* Restores the original PHP version and runs `composer update` once again to restore the original dependencies. (Unless `--no-composer-restore` is used.)
+* Restores the original PHP version and runs `composer install` to restore the original dependencies in _/vendor/_.
 
 ## What PHP Versions Are Supported?
 
@@ -52,10 +52,11 @@ Here is a pattern you can use to run PhpUnit under PHP 7.1, 7.4 and 8.1.
 * Given you have installed phpunit in your project with Composer
 * And you run your tests using `./vendor/bin/phpunit -c phpunit.xml`
 * Then you can implement PhpSwap in the following way:
+* See also Controller File Example further down.
 
 ```shell
-./vendor/bin/phpswap use 7.1 --no-composer-restore './vendor/bin/phpunit -c phpunit.xml'
-./vendor/bin/phpswap use 7.4 --no-composer-restore './vendor/bin/phpunit -c phpunit.xml'
+./vendor/bin/phpswap use 7.1 './vendor/bin/phpunit -c phpunit.xml'
+./vendor/bin/phpswap use 7.4 './vendor/bin/phpunit -c phpunit.xml'
 ./vendor/bin/phpswap use 8.1 './vendor/bin/phpunit -c phpunit.xml'
 ```
 
@@ -65,14 +66,33 @@ Here is a pattern you can use to run PhpUnit under PHP 7.1, 7.4 and 8.1.
 
 In verbose mode you will see the Composer output.
 
-### `--no-composer-restore`
+### `composer.lock.phpswap`
 
-**Use this option to save time** if restoring the Composer dependencies is not necessary. In the PhpUnit examples above, it is not necessary to restore the dependencies after running against PHP 7.1, because the next line will install the dependencies necessary for testing against PHP 7.4. but the last line it's omitted because we want to restore the composer dependencies back to how they were originally.
+During execution, a file called _composer.lock.phpswap_ is temporarily created in your project. It contains a copy of the _composer.lock_ file that was in your project before the first swap. This file is used to refresh _composer.lock_ at the end of a swap. In some error situations this file may not be deleted. To recover run the following `./vendor/bin/phpswap use 7.4 "echo"`  The PHP version is irrelevant in this case.
 
-When this option used, a file called _composer.lock.phpswap_ will remain in your project. It contains a copy of the _composer.lock_ file that was in your project before the first swap command. This file is used to replace _composer.lock_ at the end of a swap **without** the `--no-composer-restore` option. However when using this option it remains.
-
-To quickly resolve this you can do something like `./vendor/bin/phpswap use 7.4 "echo"`  The PHP version is irrelevant in this case.
+If that doesn't work copy the contents of _composer.lock.phpswap_ over _composer.lock_ and delete _composer.lock.phpswap_.
 
 ## Troubleshooting
 
-If you try to run a command and see "Composer detected issues in your platform:", try running `composer update` then repeat your command.
+If you try to run a command and see "Composer detected issues in your platform:", try running `composer install` (or `composer update`?) then repeat your command.
+
+## Controller File Example
+
+Here is a complete snippet for controlling tests. Save as _bin/run_unit_tests.sh_ and call it like this: `bin/run_unit_tests.sh -v`. You may leave off the verbose `-v` flag unless troubleshooting.
+
+```bash
+#!/usr/bin/env bash
+s="${BASH_SOURCE[0]}";[[ "$s" ]] || s="${(%):-%N}";while [ -h "$s" ];do d="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$d/$s";done;__DIR__=$(cd -P "$(dirname "$s")" && pwd)
+
+cd "$__DIR__/.."
+
+verbose=''
+if [[ "${*}" == *'-v'* ]]; then
+  verbose='-v'
+fi
+./vendor/bin/phpswap use 7.3 $verbose './vendor/bin/phpunit -c tests_unit/phpunit.xml'
+./vendor/bin/phpswap use 7.4 $verbose './vendor/bin/phpunit -c tests_unit/phpunit.xml'
+./vendor/bin/phpswap use 8.0 $verbose './vendor/bin/phpunit -c tests_unit/phpunit.xml'
+./vendor/bin/phpswap use 8.1 $verbose './vendor/bin/phpunit -c tests_unit/phpunit.xml'
+./vendor/bin/phpswap use 8.2 $verbose './vendor/bin/phpunit -c tests_unit/phpunit.xml'
+```
