@@ -7,7 +7,7 @@ tags: ''
 
 ## Summary
 
-Provides a means to execute code under different PHP versions from the CLI. This was first built to run PhpUnit tests against Composer projects across different PHP versions. See example below.
+Provides a means to easily execute code with PHP versions other than the default. This was first built to run PhpUnit tests within Composer projects across multiple PHP versions. See example below.
 
 ## Quick Start
 
@@ -25,10 +25,10 @@ php -v
 
 ## What It Does
 
-* Temporarily modifies `$PATH` so that the requested PHP is used.
-* Runs `composer update` so that dependencies are updated for the correct PHP version.
-* Runs the given executable, which can be a command or a script path
-* Restores the original PHP version and runs `composer install` to restore the original dependencies in _/vendor/_.
+* Temporarily modifies `$PATH` with a different PHP version binary.
+* If _composer.json_ is present, runs `composer update` so that dependencies appropriate for the swapped PHP version get installed.
+* Runs the given executable, which can be a command or a script path.
+* Lastly, if necessary, runs `composer update` with the original PHP to restore the Composer dependencies.
 
 ## What PHP Versions Are Supported?
 
@@ -73,7 +73,7 @@ In verbose mode you will see the Composer output.
 
 ### `--working-dir`
 
-This sets the working directory from which your script is called.  This is optional.
+This sets the working directory from which your script is called. This is optional.
 
 ## Troubleshooting
 
