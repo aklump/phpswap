@@ -13,8 +13,9 @@ class ComposerRestore {
    *
    * @see \AKlump\PhpSwap\Command\ExecuteCommand::VERBOSE
    */
-  public function __construct($options) {
+  public function __construct(Bash $bash, $options = 0) {
     $this->options = $options;
+    $this->bash = $bash;
   }
 
   /**
@@ -37,9 +38,10 @@ class ComposerRestore {
     $commands[] = "[ -f $swapfile ] || exit 0";
     $commands[] = "mv $swapfile composer.lock";
     $commands[] = "composer update $quiet--no-interaction || exit 1";
-    $last_line = system(implode(';', $commands), $result_code);
+    $last_line = $this->bash->system(implode(';', $commands));
+    $result_code = $this->bash->getResultCode();
     if ($result_code !== 0) {
-      throw new \RuntimeException($last_line);
+      throw new \RuntimeException($last_line, $result_code);
     }
   }
 

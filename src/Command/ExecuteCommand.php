@@ -2,6 +2,7 @@
 
 namespace AKlump\PhpSwap\Command;
 
+use AKlump\PhpSwap\Bash;
 use AKlump\PhpSwap\Execute;
 use AKlump\PhpSwap\Mamp;
 use Symfony\Component\Console\Command\Command;
@@ -39,7 +40,7 @@ class ExecuteCommand extends Command {
       if ($output->isVerbose()) {
         $options |= static::VERBOSE;
       }
-      $execute = new Execute($options, $php_binary);
+      $execute = new Execute(new Bash(), $php_binary, $options);
       $lines = $execute($working_directory, $executable);
       if ($lines) {
         $output->writeln(array_map(function ($line) {
