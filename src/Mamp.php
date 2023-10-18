@@ -32,7 +32,7 @@ class Mamp implements ProviderInterface {
     $regex = '/^' . $regex . '/i';
     foreach (self::getAvailablePhpDirectories() as $bin_ver => $dir) {
       preg_match($regex, $bin_ver, $matches);
-      if ($matches && $matches[0] === $version) {
+      if ($bin_ver === $version || ($matches && $matches[0] === $version)) {
         return $dir . '/bin';
       }
     }
