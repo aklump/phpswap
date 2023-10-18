@@ -1,3 +1,8 @@
+<!--
+id: phpswapcli
+tags: ''
+-->
+
 # Command Line Usage
 
 This package includes a simple CLI tool that lets you swap PHP for a single terminal window.
