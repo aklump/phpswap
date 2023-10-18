@@ -13,7 +13,7 @@ require_once $autoload;
 
 $app = new Application();
 $app->setName('phpswap');
-$app->setVersion('0.0.6');
+$app->setVersion('0.0.7');
 $app->add(new ListCommand());
 $app->add(new ExecuteCommand());
 $app->run();
