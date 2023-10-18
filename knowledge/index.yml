@@ -2,3 +2,4 @@ page_order:
   - readme
   - changelog
   - ''
+  - phpswapcli
