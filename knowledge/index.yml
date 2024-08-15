@@ -1,5 +1,6 @@
 page_order:
-  - readme
-  - changelog
-  - ''
-  - phpswapcli
+  0: ''
+  general:
+    - readme
+    - changelog
+    - phpswapcli
