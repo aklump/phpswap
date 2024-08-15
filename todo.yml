@@ -1,0 +1,2 @@
+- rewrite CLI version to not use composer, so either vanilla php or bash.
+- add "phpswap exit" to return to original
