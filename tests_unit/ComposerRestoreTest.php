@@ -43,6 +43,7 @@ class ComposerRestoreTest extends TestCase {
     $composer = $this->getTestFileFilepath('composer.json');
     file_put_contents($composer, '{}');
     $swap_file = $this->getTestFileFilepath(Execute::SWAP_FILE, TRUE);
+    file_put_contents($swap_file, '{}');
 
     $restore($working_dir);
     $this->assertFileDoesNotExist($swap_file);
