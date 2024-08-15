@@ -3,6 +3,7 @@
 namespace AKlump\PhpSwap;
 
 use AKlump\PhpSwap\Command\ExecuteCommand;
+use InvalidArgumentException;
 use RuntimeException;
 
 /**
@@ -16,6 +17,11 @@ class Execute {
 
   /** @var \AKlump\PhpSwap\Bash */
   private $bash;
+
+  /**
+   * @var int
+   */
+  private $options;
 
   /**
    * @param \AKlump\PhpSwap\Bash $bash
@@ -40,10 +46,10 @@ class Execute {
    */
   public function __invoke($working_dir, $command) {
     if (empty($working_dir)) {
-      throw new \InvalidArgumentException('$working_dir cannot be empty.');
+      throw new InvalidArgumentException('$working_dir cannot be empty.');
     }
     if (!file_exists($working_dir)) {
-      throw new \InvalidArgumentException(sprintf('$working_dir does not exist: %s.  Create it and try again.', $working_dir));
+      throw new InvalidArgumentException(sprintf('$working_dir does not exist: %s.  Create it and try again.', $working_dir));
     }
     $quiet = '--quiet ';
     if ($this->options & ExecuteCommand::VERBOSE) {

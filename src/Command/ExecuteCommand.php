@@ -5,6 +5,7 @@ namespace AKlump\PhpSwap\Command;
 use AKlump\PhpSwap\Bash;
 use AKlump\PhpSwap\Execute;
 use AKlump\PhpSwap\Mamp;
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -48,7 +49,7 @@ class ExecuteCommand extends Command {
         }, $lines));
       }
     }
-    catch (\Exception $exception) {
+    catch (Exception $exception) {
       $output->writeln(sprintf("<error>%s</error>", $exception->getMessage()));
 
       return 1;

@@ -3,6 +3,7 @@
 namespace AKlump\PhpSwap;
 
 use DirectoryIterator;
+use RuntimeException;
 use UnexpectedValueException;
 
 /**
@@ -43,17 +44,17 @@ class Mamp implements ProviderInterface {
     if (NULL === static::$files) {
       $mamp_dir = '/Applications/MAMP/';
       if (!is_dir($mamp_dir)) {
-        throw new \RuntimeException(sprintf('MAMP cannot be found at the expected location: %s', $mamp_dir));
+        throw new RuntimeException(sprintf('MAMP cannot be found at the expected location: %s', $mamp_dir));
       }
       $mamp_php_dir = $mamp_dir . '/bin/php/';
       if (!is_dir($mamp_php_dir)) {
-        throw new \RuntimeException(sprintf('Missing expected directory within MAMP: %s', $mamp_php_dir));
+        throw new RuntimeException(sprintf('Missing expected directory within MAMP: %s', $mamp_php_dir));
       }
 
       self::$files = [];
       $iterator = (new DirectoryIterator($mamp_php_dir));
       foreach ($iterator as $item) {
-        if (preg_match('/php([\d\.]+)/', $item->getFilename(), $matches)) {
+        if (preg_match('/php([\d.]+)/', $item->getFilename(), $matches)) {
           self::$files[$matches[1]] = $item->getPathname();
         }
       }
