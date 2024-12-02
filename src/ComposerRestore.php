@@ -3,6 +3,7 @@
 namespace AKlump\PhpSwap;
 
 use AKlump\PhpSwap\Command\ExecuteCommand;
+use AKlump\PhpSwap\Helper\Bash;
 use RuntimeException;
 
 class ComposerRestore {
@@ -10,7 +11,7 @@ class ComposerRestore {
   protected $options = 0;
 
   /**
-   * @var \AKlump\PhpSwap\Bash
+   * @var \AKlump\PhpSwap\Helper\Bash
    */
   private $bash;
 

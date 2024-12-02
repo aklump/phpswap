@@ -2,15 +2,15 @@
 
 namespace AKlump\PhpSwap\Tests;
 
-use AKlump\PhpSwap\Bash;
 use AKlump\PhpSwap\Command\ExecuteCommand;
 use AKlump\PhpSwap\ComposerRestore;
 use AKlump\PhpSwap\Execute;
+use AKlump\PhpSwap\Helper\Bash;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \AKlump\PhpSwap\ComposerRestore
- * @uses   \AKlump\PhpSwap\Bash
+ * @uses   \AKlump\PhpSwap\Helper\Bash
  */
 class ComposerRestoreTest extends TestCase {
 

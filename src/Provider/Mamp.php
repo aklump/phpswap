@@ -1,6 +1,6 @@
 <?php
 
-namespace AKlump\PhpSwap;
+namespace AKlump\PhpSwap\Provider;
 
 use DirectoryIterator;
 use RuntimeException;

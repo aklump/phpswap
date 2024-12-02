@@ -2,7 +2,7 @@
 
 namespace AKlump\PhpSwap\Tests;
 
-use AKlump\PhpSwap\Bash;
+use AKlump\PhpSwap\Helper\Bash;
 
 trait TestWithBashTrait {
 

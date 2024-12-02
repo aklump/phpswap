@@ -2,9 +2,9 @@
 
 namespace AKlump\PhpSwap\Command;
 
-use AKlump\PhpSwap\Bash;
 use AKlump\PhpSwap\Execute;
-use AKlump\PhpSwap\Mamp;
+use AKlump\PhpSwap\Helper\Bash;
+use AKlump\PhpSwap\Provider\Mamp;
 use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

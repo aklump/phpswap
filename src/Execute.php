@@ -3,6 +3,7 @@
 namespace AKlump\PhpSwap;
 
 use AKlump\PhpSwap\Command\ExecuteCommand;
+use AKlump\PhpSwap\Helper\Bash;
 use InvalidArgumentException;
 use RuntimeException;
 
@@ -15,7 +16,7 @@ class Execute {
 
   private $binary;
 
-  /** @var \AKlump\PhpSwap\Bash */
+  /** @var \AKlump\PhpSwap\Helper\Bash */
   private $bash;
 
   /**
@@ -24,7 +25,7 @@ class Execute {
   private $options;
 
   /**
-   * @param \AKlump\PhpSwap\Bash $bash
+   * @param \AKlump\PhpSwap\Helper\Bash $bash
    * @param int $options
    * @param string $path_to_php_binary
    *

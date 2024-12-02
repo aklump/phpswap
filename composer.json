@@ -3,7 +3,11 @@
   "type": "library",
   "autoload": {
     "psr-4": {
-      "AKlump\\PhpSwap\\": "src/",
+      "AKlump\\PhpSwap\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
       "AKlump\\PhpSwap\\Tests\\": "tests_unit/"
     }
   },

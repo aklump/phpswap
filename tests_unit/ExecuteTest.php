@@ -2,9 +2,7 @@
 
 namespace AKlump\PhpSwap\Tests;
 
-use AKlump\PhpSwap\Bash;
 use AKlump\PhpSwap\Command\ExecuteCommand;
-use AKlump\PhpSwap\ComposerRestore;
 use AKlump\PhpSwap\Execute;
 use PHPUnit\Framework\TestCase;
 
