@@ -34,7 +34,9 @@ $START_DIR = getcwd() . '/';
       $provider = new Mamp();
       $helper = $this->getHelper('question');
 
-      $version = (new GetLastVersionUsed())($memory_file);
+      $memory_file = GetLastVersionUsed::BASENAME;
+      $last_version = new GetLastVersionUsed();
+      $version = $last_version($memory_file);
       if ($version && !$input->getOption('pick')) {
         $output->write([
           sprintf('<info>%s found in %s</info>', $version, $memory_file),
@@ -50,7 +52,7 @@ $START_DIR = getcwd() . '/';
       }
 
       $command = sprintf('export PATH="%s:$PATH"', $provider->getBinary($version));
-      $command .= sprintf(';echo "%s" > %s', $version, GetLastVersionUsed::BASENAME);
+      $command .= sprintf(';echo "%s" > %s', $version, $memory_file);
       // @url https://superuser.com/questions/725910/pbcopy-sort-of-freezes-i-can-still-type-though
       exec("pbcopy <<< '$command' > /dev/null");
       $output->writeln(
@@ -61,7 +63,7 @@ $START_DIR = getcwd() . '/';
 
       return Command::SUCCESS;
     }
-    catch (\Exception $exception) {
+    catch (Exception $exception) {
       $output->writeln(sprintf("<error>%s</error>", $exception->getMessage()));
     }
 
