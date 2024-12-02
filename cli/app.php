@@ -34,9 +34,13 @@ $START_DIR = getcwd() . '/';
       $provider = new Mamp();
       $helper = $this->getHelper('question');
 
-      $version = (new GetLastVersionUsed())();
+      $version = (new GetLastVersionUsed())($memory_file);
       if ($version && !$input->getOption('pick')) {
-        $output->writeln('Use --pick for other versions.');
+        $output->write([
+          sprintf('<info>%s found in %s</info>', $version, $memory_file),
+          '<info>Use --pick for other versions.</info>',
+          '',
+        ], TRUE);
       }
       else {
         $options = $provider->listAll();

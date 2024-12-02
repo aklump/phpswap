@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.10] - 2024-12-02
+
+### Added
+
+- Able to find last version from child directories of a project.
+
 ## [0.0.9] - 2024-12-02
 
 ### Added
