@@ -35,17 +35,43 @@ $START_DIR = getcwd() . '/';
       $helper = $this->getHelper('question');
 
       $memory_file = GetLastVersionUsed::BASENAME;
-      $last_version = new GetLastVersionUsed();
-      $version = $last_version($memory_file);
-      if ($version && !$input->getOption('pick')) {
+      $get_last_version_used = new GetLastVersionUsed();
+      $version = $get_last_version_used($memory_file);
+      $found_version = $version;
+      $options = $provider->listAll();
+
+      // If last version used is no longer available, we should try to match
+      // based on the minor version and automatically adjust it.
+      if (!in_array($version, $options)) {
+        preg_match('/^(\d+\.\d+)(\.\d+)?$/', $version, $matches);
+        $major_minor = $matches[1];
+        $options = array_filter($options, function ($option) use ($major_minor) {
+          return strpos($option, $major_minor) === 0;
+        });
+        if (count($options) === 1) {
+          $version = array_values($options)[0];
+          $output->write([
+            sprintf('<comment>PHP %s not found.  %s is available and will be used moving forward.</comment>', $found_version, $version),
+            '',
+          ], TRUE);
+        }
+        else {
+          $output->write([
+            sprintf('<error>No version of PHP %s can be found.<error>', $major_minor),
+            '',
+          ], TRUE);
+        }
+      }
+
+      if (!empty($version) && !$input->getOption('pick')) {
         $output->write([
-          sprintf('<info>%s found in %s</info>', $version, $memory_file),
-          '<info>Use --pick for other versions.</info>',
+          sprintf('<info>%s set in %s</info>', $found_version, $memory_file),
+          '<info>Use --pick to choose another version.</info>',
           '',
         ], TRUE);
       }
       else {
-        $options = $provider->listAll();
+        $memory_file = GetLastVersionUsed::BASENAME;
         $question = new ChoiceQuestion("Use which version?", $options);
         $question->setAutocompleterValues([]);
         $version = $helper->ask($input, $output, $question);
