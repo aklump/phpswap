@@ -42,7 +42,7 @@ $START_DIR = getcwd() . '/';
 
       // If last version used is no longer available, we should try to match
       // based on the minor version and automatically adjust it.
-      if (!in_array($version, $options)) {
+      if ($version && !in_array($version, $options)) {
         preg_match('/^(\d+\.\d+)(\.\d+)?$/', $version, $matches);
         $major_minor = $matches[1];
         $options = array_filter($options, function ($option) use ($major_minor) {
