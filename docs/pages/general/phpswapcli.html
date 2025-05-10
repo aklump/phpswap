@@ -4,10 +4,10 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="../../dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=0.0.11">
-      <link rel="stylesheet" href="../../dist/dist/bootstrap_theme.css?ver=0.0.11">
-      <link rel="stylesheet" href="../../dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=0.0.11">
-    <title>Command Line Usage | Book</title>
+      <link rel="stylesheet" href="../../dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=0.0.13">
+      <link rel="stylesheet" href="../../dist/dist/bootstrap_theme.css?ver=0.0.13">
+      <link rel="stylesheet" href="../../dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=0.0.13">
+    <title>PhpSwap CLI | Book</title>
 </head>
 <body class="my-5">
 
@@ -41,18 +41,41 @@
 <main class="container-md flex-column">
   <div class="row mb-5 pt-5">
     <article class="col">
-      <h1 class="mb-4 text-primary">Command Line Usage</h1>
-      <p>This package includes a simple CLI tool that lets you swap PHP for a single terminal window.</p>
-<h2>Installation</h2>
-<p>Adjust your <code>$PATH</code> to be able to locate <em>phpswap/cli/bin</em>.</p>
-<p><code>export PATH=/Users/aklump/Code/Php/phpswap/cli/bin:$PATH</code></p>
+      <h1 class="mb-4 text-primary">PhpSwap CLI</h1>
+      <p>This package includes a CLI tool that lets you swap the CLI PHP being used in your terminal. The swap affects the current window only, by modifying and exporting the <code>$PATH</code>. Open a new window and the system default PHP will be at play.</p>
+<h2>Installing <code>phpswap</code> CLI</h2>
+<p>Add an alias, which sources the <code>phpswap</code> command, adjusting the path as appropriate.</p>
+<pre><code class="shell">alias phpswap="source ~/Code/Packages/cli/phpswap/app/cli/bin/phpswap"
+</code></pre>
 <h2>Usage</h2>
+<p>For help type <code>phpswap -h</code></p>
+<h3>Register a Project's PHP Version</h3>
 <ol>
-<li>Type <code>phpswap</code> in your terminal window to see the available PHP versions.</li>
-<li>Choose a PHP version and copy that command that is printed.</li>
-<li>Paste that command into the same window to swap to that version.</li>
+<li>In your terminal, <code>cd</code> to your project's root directory.</li>
+<li>Type <code>phpswap</code></li>
+<li>Select the version for your project (current plus all child directories).</li>
+<li>Test it with <code>php -v</code></li>
 </ol>
-<p>The swap only affects the current terminal window. Simply close the window when you're done.</p>
+<h3>Register a Different Version</h3>
+<p>To change the version for a configured project, use <code>phpswap set</code> to access the</p>
+<h3>Swap the Version</h3>
+<p>Once a project's version has been registered, you may swap the active PHP using <code>phpswap</code> from inside that project. Alternately, you can setup up <em>Auto Swap</em> (see below).</p>
+<pre><code class="shell">cd my/great/project
+phpswap
+</code></pre>
+<h2>Auto Swap on Directory Change</h2>
+<p>You may configure PhpSwap to automatically swap PHP when you change directories. If that directory <s>or one of it's child directories</s>, has been setup with a PhpSwap version, PhpSwap will read that version and automatically swap. This saves you from having to manually type <code>phpswap</code>.</p>
+<p><strong>Note: autoswap only works when changing to a directory that contains <em>.phpswap</em></strong>. That is, child directories will not autoswap, whereas <strong>manually typing <code>phpswap</code> in a child directory will swap PHP based on a parent directory's configuration</strong>.</p>
+<h3>Setup in ZShell</h3>
+<p>Add the following to <em>.zshrc</em>, adjusting the path to phpswap as appropriate.</p>
+<pre><code class="shell"># PhpSwap functionality to auto-swap PHP when cd-ing into a project.
+# @url https://github.com/aklump/phpswap
+function phpswap_autoswap {
+  [[ -f ".phpswap" ]] &amp;&amp; source ~/Code/Packages/cli/phpswap/app/cli/bin/phpswap
+}
+autoload -Uz add-zsh-hook
+add-zsh-hook chpwd phpswap_autoswap
+</code></pre>
     </article>
   </div>
 </main>
@@ -60,9 +83,9 @@
   <footer class="footer d-flex justify-content-center">
     <div class="flex-column justify-content-center">
               Version:
-        <strong>0.0.11</strong>
+        <strong>0.0.13</strong>
         &bull;
-                    Last Update: <strong>12/2/2024</strong>
+                    Last Update: <strong>5/10/2025</strong>
           </div>
   </footer>
 
@@ -128,7 +151,7 @@
     </li>
   
                                     <li data-page="phpswapcli" value="3">
-      <a class="js-page-link" href="phpswapcli.html">Command Line Usage<span
+      <a class="js-page-link" href="phpswapcli.html">PhpSwap CLI<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
@@ -149,7 +172,7 @@
     </li>
   
                                 <li data-page="phpswapcli" value="3">
-      <a class="js-page-link" href="phpswapcli.html">Command Line Usage</a>
+      <a class="js-page-link" href="phpswapcli.html">PhpSwap CLI</a>
     </li>
   
                   </ol>
@@ -175,16 +198,16 @@
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="changelog.html">Changelog</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="phpswapcli.html">Command Line Usage</a>
+                 data-tags="[]" href="phpswapcli.html">PhpSwap CLI</a>
                               </ul>
       </div>
     </div>
   </div>
 </div>
 
-  <script src="../../dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=0.0.11"></script>
-  <script src="../../dist/lunr.js?ver=0.0.11"></script>
-  <script src="../../dist/knowledge.min.js?ver=0.0.11"></script>
+  <script src="../../dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=0.0.13"></script>
+  <script src="../../dist/lunr.js?ver=0.0.13"></script>
+  <script src="../../dist/knowledge.min.js?ver=0.0.13"></script>
 
 </body>
 </html>

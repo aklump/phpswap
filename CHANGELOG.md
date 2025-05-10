@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.13] - 2025-05-10
+
+### Added
+
+- Autoswap feature
+
+### Changed
+
+- Command `pick` has been changed to `set`
+- 🚨BREAKING CHANGE! Installation method... see phpswapcli.md for more info.
+- 🚨BREAKING CHANGE! If you see "....phpswap:1: command not found: 8.2.26", you must re-register, e.g. `phpswap set`
+
+### Removed
+
+- Need to paste command to swap php, it now happens automatically.
+
 ## [0.0.10] - 2024-12-02
 
 ### Added
