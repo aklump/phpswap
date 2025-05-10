@@ -2,26 +2,11 @@
 
 namespace AKlump\PhpSwap\Helper;
 
-/**
- * Checks the current working directory for a version memory.
- */
-class GetLastVersionUsed {
+class GetPhpSwapFilePath {
 
   const BASENAME = '.phpswap';
 
-  /**
-   * @return string
-   */
-  public function __invoke(&$memory_file = NULL) {
-    $memory_file = $this->upfind();
-    if (!file_exists($memory_file)) {
-      return '';
-    }
-
-    return trim(file_get_contents($memory_file));
-  }
-
-  private function upfind() {
+  public function __invoke() {
     $path = getcwd();
     while ($path
       && $path !== DIRECTORY_SEPARATOR
@@ -36,5 +21,4 @@ class GetLastVersionUsed {
 
     return realpath($expected);
   }
-
 }

@@ -1,1 +1,28 @@
-../app.php
+#!/usr/bin/env bash
+
+# @file
+#
+# Controller for PhpSwap
+#
+
+# ========= Try to change to PHP version as defined in .phpswap =========
+if [[ -z "$1" ]] || [[ "$1" == '--auto' ]]; then
+  swapfile=$(pwd)
+  while [[ -n "$swapfile" && "$swapfile" != "/" ]]; do
+    if [[ -f "$swapfile/.phpswap" ]]; then
+      swapfile="$swapfile/.phpswap"
+      # Once swapped in a project, don't do it again until the swapfile changes.
+      [[ "$PHPSWAP" == "$swapfile" ]] && return
+      # We have to use BASH to be able to alter the $PATH of the current shell
+      source "$swapfile"
+      export PHPSWAP="$swapfile"
+      return
+    fi
+    swapfile=$(dirname "$swapfile")
+  done
+fi
+
+# ========= Set the PHP Version to Use =========
+s="${BASH_SOURCE[0]}";[[ "$s" ]] || s="${(%):-%N}";while [ -h "$s" ];do d="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$d/$s";done;__DIR__=$(cd -P "$(dirname "$s")" && pwd)
+# Leverage PHP for the setting of versions, as it's cleaner code.
+php "$__DIR__/../cli.php" "$@" && source .phpswap
