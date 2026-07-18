@@ -66,7 +66,7 @@ class Execute {
     $commands[] = "if [ -f composer.json ]; then
   ! [ -f $swapfile ] || rm $swapfile || exit 1
   ! [ -f composer.lock ] || mv composer.lock $swapfile || exit 1
-  composer update $quiet--no-interaction || exit 1;
+  composer update --no-blocking $quiet--no-interaction || exit 1;
 fi";
 
     // Now include the user's command or script.

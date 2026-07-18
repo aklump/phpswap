@@ -42,7 +42,7 @@ class ComposerRestore {
     }
     $commands[] = "[ -f \"$swapfile\" ] || exit 0";
     $commands[] = "mv \"$swapfile\" composer.lock";
-    $commands[] = "composer update $quiet--no-interaction || exit 1";
+    $commands[] = "composer update --no-blocking $quiet--no-interaction || exit 1";
     $last_line = $this->bash->system(implode(';', $commands));
     $result_code = $this->bash->getResultCode();
     if ($result_code !== 0) {
