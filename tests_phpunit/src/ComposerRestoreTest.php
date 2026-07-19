@@ -6,6 +6,8 @@ use AKlump\PhpSwap\Command\ExecuteCommand;
 use AKlump\PhpSwap\ComposerRestore;
 use AKlump\PhpSwap\Execute;
 use AKlump\PhpSwap\Helper\Bash;
+use AKlump\PhpSwap\Tests\TestingTraits\TestWithBashTrait;
+use AKlump\PhpSwap\Tests\TestingTraits\TestWithFilesTrait;
 use PHPUnit\Framework\TestCase;
 
 /**

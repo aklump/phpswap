@@ -4,6 +4,8 @@ namespace AKlump\PhpSwap\Tests;
 
 use AKlump\PhpSwap\Command\ExecuteCommand;
 use AKlump\PhpSwap\Execute;
+use AKlump\PhpSwap\Tests\TestingTraits\TestWithBashTrait;
+use AKlump\PhpSwap\Tests\TestingTraits\TestWithFilesTrait;
 use PHPUnit\Framework\TestCase;
 
 /**

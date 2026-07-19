@@ -8,12 +8,12 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "AKlump\\PhpSwap\\Tests\\": "tests_unit/"
+      "AKlump\\PhpSwap\\Tests\\": "tests_phpunit/src/"
     }
   },
   "require": {
     "php": ">=5.5",
-    "symfony/console": "^3.4 | ^4.4 | ^5.4"
+    "symfony/console": "^3.4 || ^4.4 || ^5.4"
   },
   "license": "BSD-3-Clause",
   "bin": [

@@ -1,6 +1,6 @@
 <?php
 
-namespace AKlump\PhpSwap\Tests;
+namespace AKlump\PhpSwap\Tests\TestingTraits;
 
 
 trait TestWithFilesTrait {

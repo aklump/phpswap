@@ -2,9 +2,9 @@
 
 namespace AKlump\PhpSwap\Tests\Helper;
 
-use AKlump\PhpSwap\Tests\TestWithFilesTrait;
-use PHPUnit\Framework\TestCase;
 use AKlump\PhpSwap\Helper\ReadVersionFromSwapfile;
+use AKlump\PhpSwap\Tests\TestingTraits\TestWithFilesTrait;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \AKlump\PhpSwap\Helper\ReadVersionFromSwapfile
@@ -13,7 +13,7 @@ class ReadVersionFromSwapfileTest extends TestCase {
 
   use TestWithFilesTrait;
 
-  private string $swapfile;
+  private $swapfile;
 
   public function testInvokeReturnsEmptyWhenNoFile() {
     $this->assertFileDoesNotExist($this->swapfile);
