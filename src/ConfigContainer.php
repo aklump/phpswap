@@ -5,7 +5,7 @@ namespace AKlump\PhpSwap;
 use AKlump\PhpSwap\Helper\ProviderService;
 use AKlump\PhpSwap\Provider\ProviderInterface;
 
-class ConfigContainer  {
+class ConfigContainer {
 
   const CONFIG_FILENAME = 'phpswap.config.php';
 
@@ -41,6 +41,10 @@ class ConfigContainer  {
    */
   public function has($id) {
     return array_key_exists($id, $this->services);
+  }
+
+  public function set($string, $realpath) {
+    $this->services[$string] = $realpath;
   }
 
 }

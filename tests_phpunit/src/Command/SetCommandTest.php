@@ -18,8 +18,9 @@ class SetCommandTest extends TestCase
 {
     public function testSetOptionPrompts()
     {
+        $app_root = realpath(__DIR__ . '/../../../');
         $application = new Application();
-        $application->add(new PhpSwapCommand(new ProviderService(new Homebrew(), new Mamp())));
+        $application->add(new PhpSwapCommand($app_root, new ProviderService(new Homebrew(), new Mamp())));
 
         $command = $application->find('phpswap');
         $commandTester = new CommandTester($command);

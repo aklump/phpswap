@@ -34,7 +34,7 @@ $app->add(new DiagnoseCommand($providers));
 $app->add(new StatusCommand());
 $app->add(new ResetCommand());
 $app->add(new ApplyCommand());
-$phpSwapCommand = new PhpSwapCommand($providers);
+$phpSwapCommand = new PhpSwapCommand($config->get('app_root'), $providers);
 $app->add($phpSwapCommand);
 $app->setDefaultCommand($phpSwapCommand->getName());
 $app->run();

@@ -28,7 +28,7 @@ class StatusCommand extends Command {
     $raw_php_version = trim(shell_exec('php -v | head -n 1'));
     $php_version = 'Unknown';
     if (preg_match('/PHP ([0-9]+\.[0-9]+\.[0-9]+)/', $raw_php_version, $matches)) {
-      $php_version = 'PHP ' . $matches[1];
+      $php_version = $matches[1];
     }
 
     $swapped = getenv('PHPSWAP_ORIGINAL_PATH') ? 'yes' : StatusCommand::NO_VALUE;

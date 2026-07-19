@@ -15,63 +15,72 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class PhpSwapCommand extends Command
-{
-    protected static $defaultName = 'phpswap';
+class PhpSwapCommand extends Command {
 
-    protected $providers;
+  protected static $defaultName = 'phpswap';
 
-    public function __construct(ProviderService $providers) {
-        parent::__construct();
-        $this->providers = $providers;
+  protected $providers;
+
+  /**
+   * @var mixed
+   */
+  protected $appRoot;
+
+  public function __construct($appRoot, ProviderService $providers) {
+    parent::__construct();
+    $this->appRoot = $appRoot;
+    $this->providers = $providers;
+  }
+
+  protected function configure() {
+    $this->setDescription('Main PhpSwap command.')
+      ->addOption('set', NULL, InputOption::VALUE_NONE, 'Set PHP version for current session only.')
+      ->addOption('unset', NULL, InputOption::VALUE_NONE, 'Return to default PHP version.')
+      ->addOption('save', NULL, InputOption::VALUE_NONE, 'Persist PHP version long-term.')
+      ->addOption('delete', NULL, InputOption::VALUE_NONE, 'Delete persistent .phpswap.');
+  }
+
+  protected function execute(InputInterface $input, OutputInterface $output) {
+    $options = array('set', 'unset', 'save', 'delete');
+    $active_options = array();
+    foreach ($options as $option) {
+      if ($input->getOption($option)) {
+        $active_options[] = $option;
+      }
     }
 
-    protected function configure()
-    {
-        $this->setDescription('Main PhpSwap command.')
-            ->addOption('set', null, InputOption::VALUE_NONE, 'Set PHP version for current session only.')
-            ->addOption('unset', null, InputOption::VALUE_NONE, 'Return to default PHP version.')
-            ->addOption('save', null, InputOption::VALUE_NONE, 'Persist PHP version long-term.')
-            ->addOption('delete', null, InputOption::VALUE_NONE, 'Delete persistent .phpswap.');
+    if (count($active_options) > 1) {
+      $output->writeln('<error>Only one of --set, --unset, --save, or --delete may be used at a time.</error>');
+
+      return 1;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
-        $options = array('set', 'unset', 'save', 'delete');
-        $active_options = array();
-        foreach ($options as $option) {
-            if ($input->getOption($option)) {
-                $active_options[] = $option;
-            }
-        }
+    $actions = new ShellActionList();
 
-        if (count($active_options) > 1) {
-            $output->writeln('<error>Only one of --set, --unset, --save, or --delete may be used at a time.</error>');
-            return 1;
-        }
-
-        $actions = new ShellActionList();
-
-        if ($input->getOption('set')) {
-            $handler = new SetHandler();
-            $handler->handle($input, $output, $actions, $this->providers);
-        } elseif ($input->getOption('unset')) {
-            $handler = new UnsetHandler();
-            $handler->handle($input, $output, $actions);
-        } elseif ($input->getOption('save')) {
-            $handler = new SaveHandler();
-            $handler->handle($input, $output, $actions, $this->providers);
-        } elseif ($input->getOption('delete')) {
-            $handler = new DeleteHandler();
-            $handler->handle($input, $output, $actions);
-        } else {
-            $handler = new DefaultHandler();
-            $handler->handle($input, $output, $actions, $this->providers);
-        }
-
-        $renderer = new ShellActionJsonRenderer();
-        $output->write($renderer->render($actions));
-
-        return 0;
+    if ($input->getOption('set')) {
+      $handler = new SetHandler($this->providers);
+      $handler->handle($input, $output, $actions, $this->getHelper('question'));
     }
+    elseif ($input->getOption('unset')) {
+      $handler = new UnsetHandler();
+      $handler->handle($input, $output, $actions);
+    }
+    elseif ($input->getOption('save')) {
+      $handler = new SaveHandler($this->appRoot, $this->providers);
+      $handler->handle($input, $output, $actions);
+    }
+    elseif ($input->getOption('delete')) {
+      $handler = new DeleteHandler();
+      $handler->handle($input, $output, $actions);
+    }
+    else {
+      $handler = new DefaultHandler($this->providers);
+      $handler->handle($input, $output, $actions, $this->getHelper('question'));
+    }
+
+    $renderer = new ShellActionJsonRenderer();
+    $output->write($renderer->render($actions));
+
+    return 0;
+  }
 }

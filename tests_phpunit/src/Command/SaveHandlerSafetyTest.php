@@ -27,8 +27,8 @@ class SaveHandlerSafetyTest extends TestCase
         chdir($app_root);
 
         try {
-            $handler = new SaveHandler();
-            $handler->handle($input, $output, $actions, $phpswap_providers);
+            $handler = new SaveHandler($app_root, $phpswap_providers);
+            $handler->handle($input, $output, $actions);
 
             $found = false;
             foreach ($actions->getActions() as $action) {
@@ -60,8 +60,8 @@ class SaveHandlerSafetyTest extends TestCase
         chdir($app_subdir);
 
         try {
-            $handler = new SaveHandler();
-            $handler->handle($input, $output, $actions, $phpswap_providers);
+            $handler = new SaveHandler($app_root, $phpswap_providers);
+            $handler->handle($input, $output, $actions);
 
             $found = false;
             foreach ($actions->getActions() as $action) {

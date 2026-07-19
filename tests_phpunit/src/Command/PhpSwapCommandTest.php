@@ -15,9 +15,10 @@ class PhpSwapCommandTest extends TestCase
 {
     public function testMutuallyExclusiveOptions()
     {
+        $app_root = realpath(__DIR__ . '/../../../');
         $providers = $this->createMock(ProviderService::class);
         $application = new Application();
-        $application->add(new PhpSwapCommand($providers));
+        $application->add(new PhpSwapCommand($app_root, $providers));
 
         $command = $application->find('phpswap');
         $commandTester = new CommandTester($command);
@@ -33,9 +34,10 @@ class PhpSwapCommandTest extends TestCase
 
     public function testUnsetOption()
     {
+        $app_root = realpath(__DIR__ . '/../../../');
         $providers = $this->createMock(ProviderService::class);
         $application = new Application();
-        $application->add(new PhpSwapCommand($providers));
+        $application->add(new PhpSwapCommand($app_root, $providers));
 
         $command = $application->find('phpswap');
         $commandTester = new CommandTester($command);

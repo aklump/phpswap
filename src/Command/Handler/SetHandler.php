@@ -5,37 +5,46 @@ namespace AKlump\PhpSwap\Command\Handler;
 use AKlump\PhpSwap\Helper\ProviderService;
 use AKlump\PhpSwap\Shell\ShellAction;
 use AKlump\PhpSwap\Shell\ShellActionList;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
-class SetHandler
-{
-    public function handle(InputInterface $input, OutputInterface $output, ShellActionList $actions, ProviderService $phpswap_providers)
-    {
-        $versions = $phpswap_providers->listAll();
+class SetHandler {
 
-        if (empty($versions)) {
-            $actions->add(ShellAction::message('No PHP versions discovered.', 'stderr'));
-            return;
-        }
+  protected $providers;
 
-        $helper = new \Symfony\Component\Console\Helper\QuestionHelper();
-        $question = new ChoiceQuestion(
-            'Please select the PHP version to use:',
-            $versions,
-            0
-        );
-        $question->setErrorMessage('Version %s is invalid.');
+  public function __construct(ProviderService $providers) {
+    $this->providers = $providers;
+  }
 
-        $version = $helper->ask($input, $output, $question);
-        $bin_path = $phpswap_providers->getBinary($version);
-        $all_binaries = $phpswap_providers->getAllBinaries();
+  public function handle(InputInterface $input, OutputInterface $output, ShellActionList $actions, QuestionHelper $helper = NULL) {
+    $versions = $this->providers->listAll();
 
-        $actions->add(ShellAction::storeOriginalPath());
-        $actions->add(ShellAction::prependPath($bin_path, $all_binaries));
-        $actions->add(ShellAction::setEnv('PHPSWAP_ACTIVE_PATH', $bin_path));
-        $actions->add(ShellAction::unsetEnv('PHPSWAP'));
-        $actions->add(ShellAction::message(sprintf('Swapped to PHP %s for this shell session.', $version)));
+    if (empty($versions)) {
+      $actions->add(ShellAction::message('No PHP versions discovered.', 'stderr'));
+
+      return;
     }
+
+    if (!$helper) {
+      $helper = new QuestionHelper();
+    }
+    $question = new ChoiceQuestion(
+      'Please select the PHP version to use:',
+      $versions,
+      0
+    );
+    $question->setErrorMessage('Version %s is invalid.');
+
+    $version = $helper->ask($input, $output, $question);
+    $bin_path = $this->providers->getBinary($version);
+    $all_binaries = $this->providers->getAllBinaries();
+
+    $actions->add(ShellAction::storeOriginalPath());
+    $actions->add(ShellAction::prependPath($bin_path, $all_binaries));
+    $actions->add(ShellAction::setEnv('PHPSWAP_ACTIVE_PATH', $bin_path));
+    $actions->add(ShellAction::unsetEnv('PHPSWAP'));
+    $actions->add(ShellAction::message(sprintf('Swapped to PHP %s for this shell session.', $version)));
+  }
 }
