@@ -18,7 +18,10 @@ class SetHandler {
     $this->providers = $providers;
   }
 
-  public function handle(InputInterface $input, OutputInterface $output, ShellActionList $actions, QuestionHelper $helper = NULL) {
+  public function handle(InputInterface $input, OutputInterface $output, ShellActionList $actions, $helper = NULL) {
+    if ($helper !== NULL && !($helper instanceof QuestionHelper)) {
+      throw new \InvalidArgumentException('$helper must be an instance of QuestionHelper or NULL.');
+    }
     $versions = $this->providers->listAll();
 
     if (empty($versions)) {
