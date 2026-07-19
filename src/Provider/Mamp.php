@@ -2,8 +2,8 @@
 
 namespace AKlump\PhpSwap\Provider;
 
+use AKlump\PhpSwap\Helper\VersionMatches;
 use DirectoryIterator;
-use RuntimeException;
 use UnexpectedValueException;
 
 /**
@@ -26,18 +26,13 @@ class Mamp implements ProviderInterface {
    * {@inheritdoc}
    */
   public function getBinary($version) {
-    $requested = explode('.', $version);
-    $regex = array_fill(0, count($requested), '(\d)\.');
-    $regex = implode('', $regex);
-    $regex = rtrim($regex, '\.');
-    $regex = '/^' . $regex . '/i';
+    $matches_version = new VersionMatches();
     $available = self::getAvailablePhpDirectories();
     uksort($available, function ($a, $b) {
       return version_compare($b, $a);
     });
     foreach ($available as $bin_ver => $dir) {
-      preg_match($regex, $bin_ver, $matches);
-      if ($bin_ver === $version || ($matches && $matches[0] === $version)) {
+      if ($matches_version($bin_ver, $version)) {
         return $dir . '/bin';
       }
     }
@@ -46,16 +41,16 @@ class Mamp implements ProviderInterface {
 
   private static function getAvailablePhpDirectories() {
     if (NULL === static::$files) {
+      self::$files = [];
       $mamp_dir = '/Applications/MAMP';
       if (!is_dir($mamp_dir)) {
-        throw new RuntimeException(sprintf('MAMP cannot be found at the expected location: %s', $mamp_dir));
+        return self::$files;
       }
       $mamp_php_dir = $mamp_dir . '/bin/php';
       if (!is_dir($mamp_php_dir)) {
-        throw new RuntimeException(sprintf('Missing expected directory within MAMP: %s', $mamp_php_dir));
+        return self::$files;
       }
 
-      self::$files = [];
       $iterator = (new DirectoryIterator($mamp_php_dir));
       foreach ($iterator as $item) {
         if (preg_match('/php([\d.]+)/', $item->getFilename(), $matches)) {
@@ -65,9 +60,5 @@ class Mamp implements ProviderInterface {
     }
 
     return self::$files;
-  }
-
-  public function getPriority() {
-    return 0;
   }
 }

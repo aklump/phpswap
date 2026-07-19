@@ -1,10 +1,12 @@
 #!/usr/bin/env php
 <?php
 
-use AKlump\PhpSwap\Command\CLICommand;
-use AKlump\PhpSwap\Command\ListCommand;
+use AKlump\PhpSwap\Command\ApplyCommand;
+use AKlump\PhpSwap\Command\DiagnoseCommand;
+use AKlump\PhpSwap\Command\PhpSwapCommand;
 use AKlump\PhpSwap\Command\ResetCommand;
-use AKlump\PhpSwap\Command\SessionCommand;
+use AKlump\PhpSwap\Command\ShowCommand;
+use AKlump\PhpSwap\Command\StatusCommand;
 use Symfony\Component\Console\Application;
 
 foreach ([
@@ -21,8 +23,12 @@ foreach ([
 $app = new Application();
 $app->setName('phpswap');
 $app->setVersion('0.0.14');
-$app->add(new CLICommand(getcwd() . '/'));
-$app->add(new ListCommand());
-$app->add(new SessionCommand());
+$app->add(new ShowCommand());
+$app->add(new DiagnoseCommand());
+$app->add(new StatusCommand());
 $app->add(new ResetCommand());
+$app->add(new ApplyCommand());
+$phpSwapCommand = new PhpSwapCommand();
+$app->add($phpSwapCommand);
+$app->setDefaultCommand($phpSwapCommand->getName());
 $app->run();

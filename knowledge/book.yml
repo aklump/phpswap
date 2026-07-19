@@ -1,4 +1,4 @@
-title: Book
+title: PhpSwap
 uuid: b3a8ff7f-6e2b-4e6a-bebd-c1d54f76f064
 chapters:
   -
@@ -6,7 +6,13 @@ chapters:
     title: General
     pages:
       - readme
-      - changelog
       - phpswapcli
+      - testing
       - examples
-      - developers
+      - changelog
+  -
+    id: providers
+    title: Providers
+    pages:
+      - homebrew
+      - mamp

@@ -44,10 +44,8 @@ class ProviderService implements ProviderInterface {
       return;
     }
 
-    // Put in reverse sort order so higher priority wins.
-    uasort($providers, function (ProviderInterface $a, ProviderInterface $b) {
-      return $b->getPriority() - $a->getPriority();
-    });
+    // The order of providers is preserved from the arguments, where the first
+    // has the highest priority.
     $this->providers = $providers;
   }
 
@@ -94,12 +92,5 @@ class ProviderService implements ProviderInterface {
     }
 
     throw new \UnexpectedValueException(sprintf('The binary is not available for the requested version: %s', $version));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getPriority() {
-    return 0;
   }
 }

@@ -5,94 +5,57 @@
 # Controller for PhpSwap
 #
 
-s="${BASH_SOURCE[0]}";[[ "$s" ]] || s="${(%):-%N}";while [ -h "$s" ];do d="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$d/$s";done;__DIR__=$(cd -P "$(dirname "$s")" && pwd)
+x(){ echo "No script dir" >&2;return 1 2>/dev/null||exit 1;};if [ -n "${BASH_VERSION:-}" ];then s="${BASH_SOURCE[0]}";elif [ -n "${ZSH_VERSION:-}" ];then eval 's="${(%):-%x}"';else x;fi;[ -n "$s" ]||x;while [ -h "$s" ];do d="$(cd -P "$(dirname "$s")"&&pwd)"||x;s="$(readlink "$s")"||x;[[ $s != /* ]]&&s="$d/$s";done;__DIR__="$(cd -P "$(dirname "$s")"&&pwd)"||x;if ! (return 0 2>/dev/null);then n="$(basename "$s")";echo "Error: $n must be sourced, not executed." >&2;echo "Use: source /path/to/$n" >&2;echo "Or create an alias like:" >&2;echo "  alias COMMAND_NAME='source /path/to/$n'" >&2;exit 1;fi;unset s d n;unset -f x
 
-# ========= Start config =========
-# The PHP version to use when running this script, which must match the version
-# used to install the composer dependencies.
-SELF_PHP=/Applications/MAMP/bin/php/php8.4.11/bin/php
+# ========= Config =========
 PHP_CONTROLLER="$__DIR__/src/_phpswap.php"
-# ========= End config =========
+export PHPSWAP_SH="$__DIR__/phpswap.sh"
 
-# ========= Require this file to be sourced  =========
-# Works in bash, zsh, and most POSIX-like shells.
-if ! (return 0 2>/dev/null); then
-  if [ -n "${BASH_SOURCE:-}" ]; then
-    _sourced_file="${BASH_SOURCE[0]}"
-  elif [ -n "${ZSH_VERSION:-}" ]; then
-    _sourced_file="${(%):-%N}"
-  else
-    _sourced_file="$0"
-  fi
-  _sourced_name="$(basename "$_sourced_file")"
-  echo "Error: $_sourced_name must be sourced, not executed." >&2
-  echo "Use: source /path/to/$_sourced_name" >&2
-  echo "Or create an alias like:" >&2
-  echo "  alias COMMAND_NAME='source /path/to/$_sourced_name'" >&2
-  unset _sourced_file _sourced_name
-  exit 1
+# ========= Runtime PHP =========
+PHPSWAP_RUNTIME_FILE="$__DIR__/.phpswap-runtime"
+
+if [[ ! -f "$PHPSWAP_RUNTIME_FILE" ]]; then
+  echo "❌ PhpSwap runtime PHP is not configured." >&2
+  echo >&2
+  echo "To repair this global PhpSwap installation:" >&2
+  echo "  cd \"$__DIR__\" && ./phpswap-repair.sh" >&2
+  echo >&2
+  echo "Then source PhpSwap again." >&2
+  return 1
 fi
 
-# ========= Use existing .phpswap to set the version =========
-if [[ -z "$1" ]]; then
-  swapfile=$(pwd)
-  while [[ -n "$swapfile" && "$swapfile" != "/" ]]; do
-    if [[ -f "$swapfile/.phpswap" ]]; then
-      swapfile="$swapfile/.phpswap"
-      # Once swapped in a project, don't do it again until the swapfile changes.
-      [[ "$PHPSWAP" == "$swapfile" ]] && return
-      # We have to use BASH to be able to alter the $PATH of the current shell
-      source "$swapfile"
-      export PHPSWAP="$swapfile"
-      return
-    fi
-    swapfile=$(dirname "$swapfile")
-  done
+source "$PHPSWAP_RUNTIME_FILE"
+PHPSWAP_RUNTIME_PHP="$(command -v php)"
+
+if [[ -z "$PHPSWAP_RUNTIME_PHP" ]] || [[ ! -x "$PHPSWAP_RUNTIME_PHP" ]]; then
+  echo "❌ PhpSwap runtime PHP could not be resolved from $PHPSWAP_RUNTIME_FILE." >&2
+  echo "To repair this global PhpSwap installation:" >&2
+  echo "  cd \"$__DIR__\" && ./phpswap-repair.sh" >&2
+  return 1
 fi
 
-if [[ " $* " == *" --delete "* ]]; then
-  _phpswap_target=""
-  _phpswap_dir=$(pwd)
-  while [[ -n "$_phpswap_dir" && "$_phpswap_dir" != "/" ]]; do
-    if [[ -f "$_phpswap_dir/.phpswap" ]]; then
-      _phpswap_target="$_phpswap_dir/.phpswap"
-      break
-    fi
-    _phpswap_dir=$(dirname "$_phpswap_dir")
-  done
-
-  if [[ -n "$_phpswap_target" ]]; then
-    if [[ -n "$PHPSWAP_ORIGINAL_PATH" ]]; then
-      export PATH="$PHPSWAP_ORIGINAL_PATH"
-      unset PHPSWAP_ORIGINAL_PATH
-      unset PHPSWAP_ACTIVE_PATH
-      unset PHPSWAP
-    fi
-    rm "$_phpswap_target"
-    echo "🗑  $_phpswap_target has been deleted." >&2
-  else
-    echo "No .phpswap file found to delete." >&2
-  fi
-  unset _phpswap_target _phpswap_dir
-  return
+if ! "$PHPSWAP_RUNTIME_PHP" -v >/dev/null 2>&1; then
+  echo "❌ PhpSwap runtime PHP is not executable: $PHPSWAP_RUNTIME_PHP" >&2
+  echo "To repair this global PhpSwap installation:" >&2
+  echo "  cd \"$__DIR__\" && ./phpswap-repair.sh" >&2
+  return 1
 fi
 
-# ========= Pass on to the PHP controller for anything else =========
-controller_args=("$@")
-if [[ -z "${1:-}" ]]; then
-  controller_args=("cli" "${controller_args[@]}")
-fi
-output=$("$SELF_PHP" -d display_errors=0 -d display_startup_errors=0 "$PHP_CONTROLLER" "${controller_args[@]}")
+# ========= Execute PHP Controller =========
+output=$("$PHPSWAP_RUNTIME_PHP" -d display_errors=0 -d display_startup_errors=0 "$PHP_CONTROLLER" "$@")
+result=$?
 
-if [[ $? -eq 0 ]]; then
-  if [[ "$output" == export* ]] || [[ "$output" == if* ]] || [[ "$output" == rm* ]]; then
-     eval "$output"
-  elif [[ "$*" == *"-h"* ]] || [[ "$*" == *"--help"* ]] || [[ "$*" == *"-V"* ]] || [[ "$*" == *"--version"* ]]; then
-     echo "$output"
-  elif [[ -f .phpswap ]]; then
-     source .phpswap
-  fi
+if [[ $result -ne 0 ]]; then
+  echo "$output" >&2
+  return $result
+fi
+
+# ========= Apply Shell Actions or Print Output =========
+if [[ "$output" == *'"phpswap":true'* ]] || [[ "$output" == *'"phpswap": true'* ]]; then
+  bash_output=$("$PHPSWAP_RUNTIME_PHP" "$PHP_CONTROLLER" _apply "$output")
+  eval "$bash_output"
 else
   echo "$output"
 fi
-return
+
+return 0

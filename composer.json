@@ -4,7 +4,10 @@
   "autoload": {
     "psr-4": {
       "AKlump\\PhpSwap\\": "src/"
-    }
+    },
+    "files": [
+      "phpswap.config.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {

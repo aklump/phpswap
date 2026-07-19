@@ -3,105 +3,73 @@ id: readme
 tags: ''
 -->
 
-# PHP Swap
+# PhpSwap
+
+![PhpSwap](../../images/phpswap.jpg)
 
 ## Summary
 
-Provides a means to easily execute code with PHP versions other than the default. This was first built to run PhpUnit tests within Composer projects across multiple PHP versions. See example below.
+**PhpSwap** is a package for working with multiple PHP versions. Its CLI lets you switch between installed PHP versions by updating `PATH` in your current shell session, without changing your system-wide PHP configuration.
+
+PhpSwap can also run automated tests across multiple PHP versions, with built-in **Composer** dependency management. Its core workflow is portable across Unix-like shells, while current provider support focuses on Homebrew and MAMP installations. PHP binaries are discovered through a pluggable provider architecture, making it easy to add support for other installation methods later.
 
 ## Quick Start
 
-This simple code example should give you an idea of how this works.
-
 ```shell
-mkdir foo
-cd foo
-composer init
-composer require aklump/phpswap
-php -v
-./vendor/bin/phpswap use 5.6 "php -v; echo"
-./vendor/bin/phpswap use 8.1 "php -v; echo"
+# Show available versions
+phpswap show
+
+# Interactively swap for the current session
+phpswap --set
+
+# Save the current PHP version for a project
+phpswap --save
+
+# Unset and return to default PHP
+phpswap --unset
 ```
 
 ## What It Does
 
 * Temporarily modifies `$PATH` with a different PHP version binary.
-* If _composer.json_ is present, runs `composer update` so that dependencies appropriate for the swapped PHP version get installed.
-* Runs the given executable, which can be a command or a script path.
-* Lastly, if necessary, runs `composer update` with the original PHP to restore the Composer dependencies.
+* Uses a JSON shell-action contract to safely mutate the current shell environment.
+* Discovers PHP versions from multiple providers like Homebrew and MAMP.
+* **Multi-PHP Testing**: Easily run your test suite across multiple PHP versions with automated Composer dependency management.
+
+## Multi-PHP Testing
+
+One of PhpSwap's most powerful features is the ability to test your project against multiple PHP versions. When running a command through PhpSwap, it can automatically update your Composer dependencies for the target PHP version and restore them afterwards.
+
+```bash
+./phpswap_execute.php using 8.1 './vendor/bin/phpunit'
+```
+
+See [Multi-PHP Testing](@testing) for more details.
 
 ## What PHP Versions Are Supported?
 
-To see the available versions, which will echo those versions provided by MAMP you can use the `show` command.
+To see the available versions, use the `show` command.
 
 ```bash
-./vendor/bin/phpswap show
+phpswap show
 ```
+
+## Providers
+
+PhpSwap discovers PHP binaries using providers. Currently supported providers:
+- **Homebrew**: Discovers PHP versions installed via Homebrew formulae.
+- **MAMP**: Discovers PHP versions bundled with MAMP.
 
 ## Dependencies
 
-* [MAMP](https://www.mamp.info/en/mamp)
-
-## Getting Started
-
-1. Ensure you have MAMP installed.
-2. Download all PHP versions using MAMP that you hope to swap.
-3. `composer require aklump/phpswap` in your project.
-4. Use `vendor/bin/phpswap show` to see what versions are available.
-5. `./phpswap list` to see all available commands.
-
-## Examples with PhpUnit
-
-Here is a pattern you can use to run PhpUnit under PHP 7.1, 7.4 and 8.1.
-
-* Given you have installed phpunit in your project with Composer
-* And you run your tests using `./vendor/bin/phpunit -c phpunit.xml`
-* Then you can implement PhpSwap in the following way:
-* See also Controller File Example further down.
-
-```shell
-./vendor/bin/phpswap use 7.1 './vendor/bin/phpunit -c phpunit.xml'
-./vendor/bin/phpswap use 7.4 './vendor/bin/phpunit -c phpunit.xml'
-./vendor/bin/phpswap use 8.1 './vendor/bin/phpunit -c phpunit.xml'
-```
-
-## CLI Options
-
-### `-v`
-
-In verbose mode you will see the Composer output.
-
-### `--working-dir`
-
-This sets the working directory from which your script is called. This is optional.
+* Bash or Zsh
+* PHP (for the controller)
+* (Optional) Homebrew or MAMP for managing PHP versions.
 
 ## Troubleshooting
 
-During execution, a file called _{{ swapfile }}_ is temporarily created in your project. It contains a copy of the _composer.lock_ file that was in your project before the swap. This file is used to refresh _composer.lock_ at the end of a swap. In some error situations this file may not be deleted. Use the snippet below to recover.
-
-You may also see "Composer detected issues in your platform:" after a swap executed. The same applies here, try the snippet below.
+Use the `diagnose` command to check if discovered PHP binaries are broken or missing dependencies.
 
 ```shell
-mv {{ swapfile }} composer.lock;composer update
-```
-
-## Controller File Example
-
-Here is a complete snippet for controlling tests. Save as _bin/run_unit_tests.sh_ and call it like this: `bin/run_unit_tests.sh -v`. You may leave off the verbose `-v` flag unless troubleshooting.
-
-```bash
-#!/usr/bin/env bash
-s="${BASH_SOURCE[0]}";[[ "$s" ]] || s="${(%):-%N}";while [ -h "$s" ];do d="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$d/$s";done;__DIR__=$(cd -P "$(dirname "$s")" && pwd)
-
-cd "$__DIR__/.."
-
-verbose=''
-if [[ "${*}" == *'-v'* ]]; then
-  verbose='-v'
-fi
-./vendor/bin/phpswap use 7.3 $verbose './vendor/bin/phpunit -c tests_phpunit/phpunit.xml'
-./vendor/bin/phpswap use 7.4 $verbose './vendor/bin/phpunit -c tests_phpunit/phpunit.xml'
-./vendor/bin/phpswap use 8.0 $verbose './vendor/bin/phpunit -c tests_phpunit/phpunit.xml'
-./vendor/bin/phpswap use 8.1 $verbose './vendor/bin/phpunit -c tests_phpunit/phpunit.xml'
-./vendor/bin/phpswap use 8.2 $verbose './vendor/bin/phpunit -c tests_phpunit/phpunit.xml'
+phpswap diagnose
 ```

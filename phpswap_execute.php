@@ -23,6 +23,7 @@
 use AKlump\PhpSwap\Execute\Execute;
 use AKlump\PhpSwap\Helper\Bash;
 use AKlump\PhpSwap\Helper\ProviderService;
+use AKlump\PhpSwap\Provider\Homebrew;
 use AKlump\PhpSwap\Provider\Mamp;
 
 foreach (array(
@@ -76,8 +77,10 @@ if (!$working_directory) {
 }
 
 try {
-  $provider = new ProviderService(new Mamp());
-  $php_binary = $provider->getBinary($version);
+  if (!isset($phpswap_providers) || !($phpswap_providers instanceof \AKlump\PhpSwap\Provider\ProviderInterface)) {
+    $phpswap_providers = new ProviderService(new Homebrew(), new Mamp());
+  }
+  $php_binary = $phpswap_providers->getBinary($version);
 
   $execute = new Execute(new Bash(), $php_binary, $options);
   $lines = $execute($working_directory, $executable);
