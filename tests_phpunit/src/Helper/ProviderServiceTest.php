@@ -21,7 +21,7 @@ class ProviderServiceTest extends TestCase {
     $provider2->method('getPriority')->willReturn(20);
 
     $service = new ProviderService($provider1, $provider2);
-    $this->assertEquals(['7.4', '8.0', '8.1', '8.2'], $service->listAll());
+    $this->assertEquals(['8.2', '8.1', '8.0', '7.4'], $service->listAll());
   }
 
   public function testHigherPriorityProviderWinsOnConflict() {

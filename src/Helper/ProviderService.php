@@ -65,7 +65,7 @@ class ProviderService implements ProviderInterface {
       $providers += $list;
     }
     uksort($providers, function ($a, $b) {
-      return version_compare($a, $b);
+      return version_compare($b, $a);
     });
 
     return $providers;

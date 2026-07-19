@@ -31,7 +31,11 @@ class Mamp implements ProviderInterface {
     $regex = implode('', $regex);
     $regex = rtrim($regex, '\.');
     $regex = '/^' . $regex . '/i';
-    foreach (self::getAvailablePhpDirectories() as $bin_ver => $dir) {
+    $available = self::getAvailablePhpDirectories();
+    uksort($available, function ($a, $b) {
+      return version_compare($b, $a);
+    });
+    foreach ($available as $bin_ver => $dir) {
       preg_match($regex, $bin_ver, $matches);
       if ($bin_ver === $version || ($matches && $matches[0] === $version)) {
         return $dir . '/bin';
@@ -42,11 +46,11 @@ class Mamp implements ProviderInterface {
 
   private static function getAvailablePhpDirectories() {
     if (NULL === static::$files) {
-      $mamp_dir = '/Applications/MAMP/';
+      $mamp_dir = '/Applications/MAMP';
       if (!is_dir($mamp_dir)) {
         throw new RuntimeException(sprintf('MAMP cannot be found at the expected location: %s', $mamp_dir));
       }
-      $mamp_php_dir = $mamp_dir . '/bin/php/';
+      $mamp_php_dir = $mamp_dir . '/bin/php';
       if (!is_dir($mamp_php_dir)) {
         throw new RuntimeException(sprintf('Missing expected directory within MAMP: %s', $mamp_php_dir));
       }

@@ -24,5 +24,46 @@ fi
 
 # ========= Set the PHP Version to Use =========
 s="${BASH_SOURCE[0]}";[[ "$s" ]] || s="${(%):-%N}";while [ -h "$s" ];do d="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$d/$s";done;__DIR__=$(cd -P "$(dirname "$s")" && pwd)
-# Leverage PHP for the setting of versions, as it's cleaner code.
-php "$__DIR__/../cli.php" "$@" && source .phpswap
+
+# Leverage PHP for everything else.
+# Use -d display_errors=0 to keep the output clean for evaluation.
+if [[ " $* " == *" --delete "* ]]; then
+  _phpswap_target=""
+  _phpswap_dir=$(pwd)
+  while [[ -n "$_phpswap_dir" && "$_phpswap_dir" != "/" ]]; do
+    if [[ -f "$_phpswap_dir/.phpswap" ]]; then
+      _phpswap_target="$_phpswap_dir/.phpswap"
+      break
+    fi
+    _phpswap_dir=$(dirname "$_phpswap_dir")
+  done
+
+  if [[ -n "$_phpswap_target" ]]; then
+    if [[ -n "$PHPSWAP_ORIGINAL_PATH" ]]; then
+      export PATH="$PHPSWAP_ORIGINAL_PATH"
+      unset PHPSWAP_ORIGINAL_PATH
+      unset PHPSWAP_ACTIVE_PATH
+      unset PHPSWAP
+    fi
+    rm "$_phpswap_target"
+    echo "🗑  $_phpswap_target has been deleted." >&2
+  else
+    echo "No .phpswap file found to delete." >&2
+  fi
+  unset _phpswap_target _phpswap_dir
+  return
+fi
+
+output=$(php -d display_errors=0 -d display_startup_errors=0 "$__DIR__/../cli.php" "$@")
+if [[ $? -eq 0 ]]; then
+  if [[ "$output" == export* ]] || [[ "$output" == if* ]] || [[ "$output" == rm* ]]; then
+     eval "$output"
+  elif [[ "$*" == *"-h"* ]] || [[ "$*" == *"--help"* ]] || [[ "$*" == *"-V"* ]] || [[ "$*" == *"--version"* ]]; then
+     echo "$output"
+  elif [[ -f .phpswap ]]; then
+     source .phpswap
+  fi
+else
+  echo "$output"
+fi
+return
