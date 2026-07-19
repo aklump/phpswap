@@ -2,7 +2,6 @@
 
 namespace AKlump\PhpSwap;
 
-use AKlump\PhpSwap\Command\ExecuteCommand;
 use AKlump\PhpSwap\Helper\Bash;
 use InvalidArgumentException;
 use RuntimeException;
@@ -11,6 +10,8 @@ use RuntimeException;
  * Execute code using a certain PHP version.
  */
 class Execute {
+
+  const VERBOSE = 1;
 
   const SWAP_FILE = 'composer.lock.phpswap';
 
@@ -29,7 +30,7 @@ class Execute {
    * @param int $options
    * @param string $path_to_php_binary
    *
-   * @see \AKlump\PhpSwap\Command\ExecuteCommand::VERBOSE
+   * @see self::VERBOSE
    */
   public function __construct(Bash $bash, $path_to_php_binary, $options = 0) {
     $this->bash = $bash;
@@ -53,7 +54,7 @@ class Execute {
       throw new InvalidArgumentException(sprintf('$working_dir does not exist: %s.  Create it and try again.', $working_dir));
     }
     $quiet = '--quiet ';
-    if ($this->options & ExecuteCommand::VERBOSE) {
+    if ($this->options & self::VERBOSE) {
       $quiet = '';
     }
     $swapfile = static::SWAP_FILE;

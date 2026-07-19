@@ -2,7 +2,6 @@
 
 namespace AKlump\PhpSwap\Tests;
 
-use AKlump\PhpSwap\Command\ExecuteCommand;
 use AKlump\PhpSwap\Execute;
 use AKlump\PhpSwap\Tests\TestingTraits\TestWithBashTrait;
 use AKlump\PhpSwap\Tests\TestingTraits\TestWithFilesTrait;
@@ -73,7 +72,7 @@ class ExecuteTest extends TestCase {
   public function testInvokeDoesNotHaveQuietWithVerboseOption() {
     $bash = $this->getBash(0, $script);
     $path_to_php_binary = exec('which php');
-    $exec = new Execute($bash, $path_to_php_binary, ExecuteCommand::VERBOSE);
+    $exec = new Execute($bash, $path_to_php_binary, Execute::VERBOSE);
     $working_dir = $this->getTestFileFilepath('foo', TRUE);
     $exec($working_dir, 'echo');
 

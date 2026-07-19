@@ -9,4 +9,4 @@ push_develop: 'no'
 push_master: true
 push_tags: true
 remote: origin
-version_file: app.php
+version_file: .web_package/version.txt

@@ -2,7 +2,6 @@
 
 namespace AKlump\PhpSwap\Tests;
 
-use AKlump\PhpSwap\Command\ExecuteCommand;
 use AKlump\PhpSwap\ComposerRestore;
 use AKlump\PhpSwap\Execute;
 use AKlump\PhpSwap\Helper\Bash;
@@ -79,7 +78,7 @@ class ComposerRestoreTest extends TestCase {
 
   public function testInvokeDoesNotHaveQuietWithVerboseOption() {
     $bash = $this->getBash(0, $script);
-    $restore = new ComposerRestore($bash, ExecuteCommand::VERBOSE);
+    $restore = new ComposerRestore($bash, Execute::VERBOSE);
     $restore('');
 
     $this->assertStringNotContainsString('--quiet', $script);

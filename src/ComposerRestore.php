@@ -18,7 +18,7 @@ class ComposerRestore {
   /**
    * @param int $options
    *
-   * @see \AKlump\PhpSwap\Command\ExecuteCommand::VERBOSE
+   * @see \AKlump\PhpSwap\Execute::VERBOSE
    */
   public function __construct(Bash $bash, $options = 0) {
     $this->options = $options;
@@ -32,7 +32,7 @@ class ComposerRestore {
    */
   public function __invoke($working_dir) {
     $quiet = '--quiet ';
-    if ($this->options & ExecuteCommand::VERBOSE) {
+    if ($this->options & Execute::VERBOSE) {
       $quiet = '';
     }
     $swapfile = Execute::SWAP_FILE;

@@ -15,7 +15,7 @@ function failed() {
 
 error=false
 message="                                                                        "
-if ! [ -e ./app.php ]; then
+if ! [ -e ./phpswap_execute.php ]; then
   error=true
   message="$message\n     You seem to be missing this: https://github.com/aklump/phpswap     "
   message="$message\n     Try running: composer require --dev aklump/phpswap                 "
@@ -35,10 +35,10 @@ verbose=''
 if [[ "${*}" == *'-v'* ]]; then
   verbose='-v'
 fi
-! ./app.php use 7.3 $verbose './vendor/bin/phpunit -c tests_phpunit/phpunit.xml' && failed "     PHP 7.3 tests failed.     " && exit 1
-! ./app.php use 7.4 $verbose './vendor/bin/phpunit -c tests_phpunit/phpunit.xml' && failed "     PHP 7.4 tests failed.     " && exit 1
-! ./app.php use 8.0 $verbose './vendor/bin/phpunit -c tests_phpunit/phpunit.xml' && failed "     PHP 8.0 tests failed.     " && exit 1
-! ./app.php use 8.1 $verbose './vendor/bin/phpunit -c tests_phpunit/phpunit.xml' && failed "     PHP 8.1 tests failed.     " && exit 1
-! ./app.php use 8.2 $verbose './vendor/bin/phpunit -c tests_phpunit/phpunit.xml' && failed "     PHP 8.2 tests failed.     " && exit 1
-! ./app.php use 8.3 $verbose './vendor/bin/phpunit -c tests_phpunit/phpunit.xml' && failed "     PHP 8.3 tests failed.     " && exit 1
-! ./app.php use 8.4 $verbose './vendor/bin/phpunit -c tests_phpunit/phpunit.xml' && failed "     PHP 8.4 tests failed.     " && exit 1
+! ./phpswap_execute.php use 7.3 $verbose './vendor/bin/phpunit -c tests_phpunit/phpunit.xml' && failed "     PHP 7.3 tests failed.     " && exit 1
+! ./phpswap_execute.php use 7.4 $verbose './vendor/bin/phpunit -c tests_phpunit/phpunit.xml' && failed "     PHP 7.4 tests failed.     " && exit 1
+! ./phpswap_execute.php use 8.0 $verbose './vendor/bin/phpunit -c tests_phpunit/phpunit.xml' && failed "     PHP 8.0 tests failed.     " && exit 1
+! ./phpswap_execute.php use 8.1 $verbose './vendor/bin/phpunit -c tests_phpunit/phpunit.xml' && failed "     PHP 8.1 tests failed.     " && exit 1
+! ./phpswap_execute.php use 8.2 $verbose './vendor/bin/phpunit -c tests_phpunit/phpunit.xml' && failed "     PHP 8.2 tests failed.     " && exit 1
+! ./phpswap_execute.php use 8.3 $verbose './vendor/bin/phpunit -c tests_phpunit/phpunit.xml' && failed "     PHP 8.3 tests failed.     " && exit 1
+! ./phpswap_execute.php use 8.4 $verbose './vendor/bin/phpunit -c tests_phpunit/phpunit.xml' && failed "     PHP 8.4 tests failed.     " && exit 1
