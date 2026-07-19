@@ -1,6 +1,6 @@
 <?php
 
-namespace AKlump\PhpSwap;
+namespace AKlump\PhpSwap\Execute;
 
 use AKlump\PhpSwap\Helper\Bash;
 use InvalidArgumentException;

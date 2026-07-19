@@ -1,16 +1,16 @@
 <?php
 
-namespace AKlump\PhpSwap\Tests;
+namespace AKlump\PhpSwap\Tests\Execute;
 
-use AKlump\PhpSwap\ComposerRestore;
-use AKlump\PhpSwap\Execute;
+use AKlump\PhpSwap\Execute\ComposerRestore;
+use AKlump\PhpSwap\Execute\Execute;
 use AKlump\PhpSwap\Helper\Bash;
 use AKlump\PhpSwap\Tests\TestingTraits\TestWithBashTrait;
 use AKlump\PhpSwap\Tests\TestingTraits\TestWithFilesTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \AKlump\PhpSwap\ComposerRestore
+ * @covers \AKlump\PhpSwap\Execute\ComposerRestore
  * @uses   \AKlump\PhpSwap\Helper\Bash
  */
 class ComposerRestoreTest extends TestCase {

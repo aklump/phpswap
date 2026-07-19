@@ -20,7 +20,7 @@
  * in this file.
  */
 
-use AKlump\PhpSwap\Execute;
+use AKlump\PhpSwap\Execute\Execute;
 use AKlump\PhpSwap\Helper\Bash;
 use AKlump\PhpSwap\Helper\ProviderService;
 use AKlump\PhpSwap\Provider\Mamp;

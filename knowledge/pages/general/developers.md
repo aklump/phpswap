@@ -5,11 +5,11 @@ tags: ''
 
 ## Usage
 
-- [ ] Create `alias phpswqp='source phpswap.sh cli'`
+- [x] Create `alias phpswap='source phpswap.sh cli'`
 
 ## Direct use in test contollers
 
-- [ ] ./phpswap_execute.php using 8.4 'php -v' | run a command under a different PHP version
+- [x] ./phpswap_execute.php using 8.4 'php -v' | run a command under a different PHP version
 
 ## CLI
 

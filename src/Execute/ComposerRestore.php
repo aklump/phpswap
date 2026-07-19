@@ -1,6 +1,6 @@
 <?php
 
-namespace AKlump\PhpSwap;
+namespace AKlump\PhpSwap\Execute;
 
 use AKlump\PhpSwap\Command\ExecuteCommand;
 use AKlump\PhpSwap\Helper\Bash;
@@ -18,7 +18,7 @@ class ComposerRestore {
   /**
    * @param int $options
    *
-   * @see \AKlump\PhpSwap\Execute::VERBOSE
+   * @see \AKlump\PhpSwap\Execute\Execute::VERBOSE
    */
   public function __construct(Bash $bash, $options = 0) {
     $this->options = $options;

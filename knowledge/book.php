@@ -5,7 +5,7 @@
 /** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
 
 use AKlump\Knowledge\Events\GetVariables;
-use AKlump\PhpSwap\Execute;
+use AKlump\PhpSwap\Execute\Execute;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
