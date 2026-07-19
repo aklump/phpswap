@@ -30,6 +30,7 @@ class FindProviderVersionForCurrentPhpTest extends TestCase
 
         $this->assertEquals('8.0.0', $match['version']);
         $this->assertEquals('/path/to', $match['bin_dir']);
+        $this->assertSame($provider, $match['provider']);
     }
 
     public function testMatchVersionFallback()
@@ -50,6 +51,7 @@ class FindProviderVersionForCurrentPhpTest extends TestCase
 
         $this->assertEquals('8.0.0', $match['version']);
         $this->assertEquals('/path/to', $match['bin_dir']);
+        $this->assertSame($provider, $match['provider']);
     }
 
     public function testNoMatchReturnsNull()

@@ -55,7 +55,7 @@ class ProviderService implements ProviderInterface {
    * @return \AKlump\PhpSwap\Provider\ProviderInterface[]
    *   An array where keys are versions and values are the provider for that version.
    */
-  private function getProviders() {
+  public function getProviders() {
     $providers = [];
     foreach ($this->providers as $provider) {
       $list = $provider->listAll();
@@ -92,5 +92,23 @@ class ProviderService implements ProviderInterface {
     }
 
     throw new \UnexpectedValueException(sprintf('The binary is not available for the requested version: %s', $version));
+  }
+
+  /**
+   * Get all binary directories from all providers.
+   *
+   * @return string[]
+   */
+  public function getAllBinaries() {
+    $binaries = [];
+    foreach ($this->listAll() as $version) {
+      try {
+        $binaries[] = preg_replace('#//+#', '/', rtrim($this->getBinary($version), '/'));
+      }
+      catch (\UnexpectedValueException $exception) {
+      }
+    }
+
+    return array_values(array_unique($binaries));
   }
 }

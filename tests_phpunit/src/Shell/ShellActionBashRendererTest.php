@@ -46,12 +46,13 @@ class ShellActionBashRendererTest extends TestCase
     {
         $renderer = new ShellActionBashRenderer();
         $actions = array(
-            array('name' => ShellAction::PREPEND_PATH, 'path' => '/new/bin'),
+            array('name' => ShellAction::PREPEND_PATH, 'path' => '/new/bin', 'others' => ['/other/bin']),
         );
         $bash = $renderer->render($actions);
-        $this->assertStringContainsString('export PATH="/new/bin:$PATH"', $bash);
+        $this->assertStringContainsString('export PATH="$PHPSWAP_ACTIVE_PATH:$PATH"', $bash);
         $this->assertStringContainsString('export PHPSWAP_ACTIVE_PATH="/new/bin"', $bash);
-        $this->assertStringContainsString('PATH="${PATH//$PHPSWAP_ACTIVE_PATH:/}"', $bash);
+        $this->assertStringContainsString('_phpswap_others=":/other/bin:"', $bash);
+        $this->assertStringContainsString('if [[ "$_phpswap_entry" != "$PHPSWAP_ACTIVE_PATH" && "$_phpswap_entry" != "/new/bin" && ( -z "$_phpswap_others" || "$_phpswap_others" != *":$_phpswap_entry:"* ) ]]; then', $bash);
     }
 
     public function testRenderSourceFile()

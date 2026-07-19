@@ -3,6 +3,9 @@
 namespace AKlump\PhpSwap\Tests\Command;
 
 use AKlump\PhpSwap\Command\PhpSwapCommand;
+use AKlump\PhpSwap\Helper\ProviderService;
+use AKlump\PhpSwap\Provider\Homebrew;
+use AKlump\PhpSwap\Provider\Mamp;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -16,7 +19,7 @@ class SaveCommandTest extends TestCase
     public function testSaveOptionDoesNotPrompt()
     {
         $application = new Application();
-        $application->add(new PhpSwapCommand());
+        $application->add(new PhpSwapCommand(new ProviderService(new Homebrew(), new Mamp())));
 
         $command = $application->find('phpswap');
         $commandTester = new CommandTester($command);

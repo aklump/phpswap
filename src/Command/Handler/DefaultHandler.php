@@ -3,6 +3,7 @@
 namespace AKlump\PhpSwap\Command\Handler;
 
 use AKlump\PhpSwap\Helper\GetPhpSwapFilePath;
+use AKlump\PhpSwap\Helper\ProviderService;
 use AKlump\PhpSwap\Shell\ShellAction;
 use AKlump\PhpSwap\Shell\ShellActionList;
 use Symfony\Component\Console\Input\InputInterface;
@@ -10,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class DefaultHandler
 {
-    public function handle(InputInterface $input, OutputInterface $output, ShellActionList $actions)
+    public function handle(InputInterface $input, OutputInterface $output, ShellActionList $actions, ProviderService $providerService)
     {
         $getPhpSwapFilePath = new GetPhpSwapFilePath();
         $swapfile = $getPhpSwapFilePath();
@@ -28,6 +29,6 @@ class DefaultHandler
         }
 
         $setHandler = new SetHandler();
-        $setHandler->handle($input, $output, $actions);
+        $setHandler->handle($input, $output, $actions, $providerService);
     }
 }

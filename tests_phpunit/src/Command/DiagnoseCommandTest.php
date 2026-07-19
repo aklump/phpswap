@@ -3,6 +3,9 @@
 namespace AKlump\PhpSwap\Tests\Command;
 
 use AKlump\PhpSwap\Command\DiagnoseCommand;
+use AKlump\PhpSwap\Helper\ProviderService;
+use AKlump\PhpSwap\Provider\Homebrew;
+use AKlump\PhpSwap\Provider\Mamp;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -11,6 +14,10 @@ use Symfony\Component\Console\Tester\CommandTester;
  * @covers \AKlump\PhpSwap\Command\DiagnoseCommand
  */
 class DiagnoseCommandTest extends TestCase {
+
+  private function getProviderService() {
+    return new ProviderService(new Homebrew(), new Mamp());
+  }
 
   public function testExecuteExitCode2WhenNoVersions() {
     // Mock Homebrew and Mamp to return nothing.
@@ -33,7 +40,7 @@ class DiagnoseCommandTest extends TestCase {
     $this->clearMampFiles();
 
     $application = new Application();
-    $application->add(new DiagnoseCommand());
+    $application->add(new DiagnoseCommand($this->getProviderService()));
     $command = $application->find('diagnose');
     $commandTester = new CommandTester($command);
 
@@ -58,7 +65,7 @@ class DiagnoseCommandTest extends TestCase {
     $this->clearMampFiles();
 
     $application = new Application();
-    $application->add(new DiagnoseCommand());
+    $application->add(new DiagnoseCommand($this->getProviderService()));
     $command = $application->find('diagnose');
     $commandTester = new CommandTester($command);
 
@@ -89,7 +96,7 @@ class DiagnoseCommandTest extends TestCase {
     $this->clearMampFiles();
 
     $application = new Application();
-    $application->add(new DiagnoseCommand());
+    $application->add(new DiagnoseCommand($this->getProviderService()));
     $command = $application->find('diagnose');
     $commandTester = new CommandTester($command);
 

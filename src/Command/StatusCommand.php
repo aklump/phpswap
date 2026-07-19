@@ -2,7 +2,6 @@
 
 namespace AKlump\PhpSwap\Command;
 
-use AKlump\PhpSwap\ConfigContainer;
 use AKlump\PhpSwap\Helper\GetPhpSwapFilePath;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,13 +12,6 @@ class StatusCommand extends Command {
   const NO_VALUE = '-';
 
   protected static $defaultName = 'status';
-
-  protected $config;
-
-  public function __construct(ConfigContainer $config) {
-    parent::__construct();
-    $this->config = $config;
-  }
 
   protected function configure() {
     $this->setDescription('Show PhpSwap-related state.');

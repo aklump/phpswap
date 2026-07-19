@@ -54,10 +54,11 @@ class ShellAction
         return new self(self::STORE_ORIGINAL_PATH);
     }
 
-    public static function prependPath($path)
+    public static function prependPath($path, array $others = array())
     {
         return new self(self::PREPEND_PATH, array(
             'path' => $path,
+            'others' => $others,
         ));
     }
 

@@ -2,7 +2,6 @@
 
 namespace AKlump\PhpSwap\Command;
 
-use AKlump\PhpSwap\ConfigContainer;
 use AKlump\PhpSwap\Shell\ShellActionBashRenderer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -12,13 +11,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ApplyCommand extends Command
 {
     protected static $defaultName = '_apply';
-
-    protected $config;
-
-    public function __construct(ConfigContainer $config) {
-        parent::__construct();
-        $this->config = $config;
-    }
 
     protected function configure()
     {

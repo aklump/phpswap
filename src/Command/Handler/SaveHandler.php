@@ -6,8 +6,6 @@ use AKlump\PhpSwap\Helper\FindProviderVersionForCurrentPhp;
 use AKlump\PhpSwap\Helper\GetCurrentPhp;
 use AKlump\PhpSwap\Helper\ProviderService;
 use AKlump\PhpSwap\Helper\WritePhpSwapFile;
-use AKlump\PhpSwap\Provider\Homebrew;
-use AKlump\PhpSwap\Provider\Mamp;
 use AKlump\PhpSwap\Shell\ShellAction;
 use AKlump\PhpSwap\Shell\ShellActionList;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SaveHandler
 {
-    public function handle(InputInterface $input, OutputInterface $output, ShellActionList $actions)
+    public function handle(InputInterface $input, OutputInterface $output, ShellActionList $actions, ProviderService $phpswap_providers)
     {
         $getCurrentPhp = new GetCurrentPhp();
         $current = $getCurrentPhp();
@@ -25,9 +23,6 @@ class SaveHandler
             return;
         }
 
-          if (!isset($phpswap_providers) || !($phpswap_providers instanceof \AKlump\PhpSwap\Provider\ProviderInterface)) {
-    $phpswap_providers = new ProviderService(new Homebrew(), new Mamp());
-  }
         $findProviderVersion = new FindProviderVersionForCurrentPhp();
         $match = $findProviderVersion($current, $phpswap_providers);
 
@@ -44,11 +39,12 @@ class SaveHandler
         }
 
         $version = $match['version'];
-        $bin_path = $match['bin_dir'];
+        $provider = $match['provider'];
+        $all_binaries = $phpswap_providers->getAllBinaries();
 
         $save_path = getcwd() . '/.phpswap';
         $writePhpSwapFile = new WritePhpSwapFile();
-        if ($writePhpSwapFile($save_path, $version, $bin_path)) {
+        if ($writePhpSwapFile($save_path, $version, $provider, $all_binaries)) {
             $actions->add(ShellAction::storeOriginalPath());
             $actions->add(ShellAction::sourceFile($save_path));
             $actions->add(ShellAction::setEnv('PHPSWAP', $save_path));

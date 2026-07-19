@@ -7,6 +7,9 @@ use AKlump\PhpSwap\Provider\ProviderInterface;
 use AKlump\PhpSwap\Services;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \AKlump\PhpSwap\ConfigContainer
+ */
 class ConfigContainerTest extends TestCase {
 
   public function testProviderOrderIsPreserved() {

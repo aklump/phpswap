@@ -43,13 +43,38 @@ class ShellActionBashRenderer
                     break;
 
                 case ShellAction::PREPEND_PATH:
-                    $new_path = $action['path'];
-                    $bash[] = 'if [[ -n "$PHPSWAP_ACTIVE_PATH" ]]; then';
-                    $bash[] = '  PATH="${PATH//$PHPSWAP_ACTIVE_PATH:/}"';
-                    $bash[] = '  PATH="${PATH//:$PHPSWAP_ACTIVE_PATH/}"';
+                    $new_path = preg_replace('#//+#', '/', rtrim($action['path'], '/'));
+                    $new_path_escaped = $this->escape($new_path);
+                    $others = isset($action['others']) ? $action['others'] : array();
+                    $others_str = '';
+                    foreach ($others as $other) {
+                        $normalized_other = preg_replace('#//+#', '/', rtrim($other, '/'));
+                        $others_str .= ':' . $this->escape($normalized_other);
+                    }
+                    if ($others_str) {
+                        $others_str .= ':';
+                    }
+
+                    $bash[] = 'if true; then';
+                    $bash[] = '  _phpswap_new_path=""';
+                    $bash[] = '  _phpswap_old_ifs="$IFS"';
+                    $bash[] = '  _phpswap_others="' . $others_str . '"';
+                    $bash[] = '  IFS=":"';
+                    $bash[] = '  for _phpswap_entry in $PATH; do';
+                    $bash[] = sprintf('    if [[ "$_phpswap_entry" != "$PHPSWAP_ACTIVE_PATH" && "$_phpswap_entry" != "%s" && ( -z "$_phpswap_others" || "$_phpswap_others" != *":$_phpswap_entry:"* ) ]]; then', $new_path_escaped);
+                    $bash[] = '      if [[ -z "$_phpswap_new_path" ]]; then';
+                    $bash[] = '        _phpswap_new_path="$_phpswap_entry"';
+                    $bash[] = '      else';
+                    $bash[] = '        _phpswap_new_path="$_phpswap_new_path:$_phpswap_entry"';
+                    $bash[] = '      fi';
+                    $bash[] = '    fi';
+                    $bash[] = '  done';
+                    $bash[] = '  IFS="$_phpswap_old_ifs"';
+                    $bash[] = '  export PATH="$_phpswap_new_path"';
+                    $bash[] = '  unset _phpswap_new_path _phpswap_old_ifs _phpswap_entry _phpswap_others';
                     $bash[] = 'fi';
-                    $bash[] = sprintf('export PATH="%s:$PATH"', $this->escape($new_path));
-                    $bash[] = sprintf('export PHPSWAP_ACTIVE_PATH="%s"', $this->escape($new_path));
+                    $bash[] = sprintf('export PHPSWAP_ACTIVE_PATH="%s"', $new_path);
+                    $bash[] = 'export PATH="$PHPSWAP_ACTIVE_PATH:$PATH"';
                     break;
 
                 case ShellAction::RESTORE_ORIGINAL_PATH:

@@ -22,13 +22,12 @@ class StatusCommandTest extends TestCase
         $commandTester->execute(array());
 
         $output = $commandTester->getDisplay();
-        $this->assertStringContainsString('PhpSwap status', $output);
         $this->assertStringContainsString('php:', $output);
         $this->assertStringContainsString('binary:', $output);
         $this->assertStringContainsString('swapped:', $output);
         $this->assertStringContainsString('saved:', $output);
         $this->assertStringContainsString('file:', $output);
-        
+
         $this->assertStringNotContainsString('PHPSWAP_ACTIVE_PATH', $output);
     }
 

@@ -7,7 +7,7 @@ use AKlump\PhpSwap\Command\Handler\DeleteHandler;
 use AKlump\PhpSwap\Command\Handler\SaveHandler;
 use AKlump\PhpSwap\Command\Handler\SetHandler;
 use AKlump\PhpSwap\Command\Handler\UnsetHandler;
-use AKlump\PhpSwap\ConfigContainer;
+use AKlump\PhpSwap\Helper\ProviderService;
 use AKlump\PhpSwap\Shell\ShellActionJsonRenderer;
 use AKlump\PhpSwap\Shell\ShellActionList;
 use Symfony\Component\Console\Command\Command;
@@ -19,11 +19,11 @@ class PhpSwapCommand extends Command
 {
     protected static $defaultName = 'phpswap';
 
-    protected $config;
+    protected $providers;
 
-    public function __construct(ConfigContainer $config) {
+    public function __construct(ProviderService $providers) {
         parent::__construct();
-        $this->config = $config;
+        $this->providers = $providers;
     }
 
     protected function configure()
@@ -54,19 +54,19 @@ class PhpSwapCommand extends Command
 
         if ($input->getOption('set')) {
             $handler = new SetHandler();
-            $handler->handle($input, $output, $actions);
+            $handler->handle($input, $output, $actions, $this->providers);
         } elseif ($input->getOption('unset')) {
             $handler = new UnsetHandler();
             $handler->handle($input, $output, $actions);
         } elseif ($input->getOption('save')) {
             $handler = new SaveHandler();
-            $handler->handle($input, $output, $actions);
+            $handler->handle($input, $output, $actions, $this->providers);
         } elseif ($input->getOption('delete')) {
             $handler = new DeleteHandler();
             $handler->handle($input, $output, $actions);
         } else {
             $handler = new DefaultHandler();
-            $handler->handle($input, $output, $actions);
+            $handler->handle($input, $output, $actions, $this->providers);
         }
 
         $renderer = new ShellActionJsonRenderer();

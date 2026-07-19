@@ -2,9 +2,8 @@
 
 namespace AKlump\PhpSwap\Command;
 
-use AKlump\PhpSwap\ConfigContainer;
 use AKlump\PhpSwap\Helper\GetDefaultPhp;
-use AKlump\PhpSwap\Services;
+use AKlump\PhpSwap\Helper\ProviderService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,11 +13,11 @@ class ShowCommand extends Command {
 
   protected static $defaultName = 'show';
 
-  protected $config;
+  protected $providers;
 
-  public function __construct(ConfigContainer $config) {
+  public function __construct(ProviderService $providers) {
     parent::__construct();
-    $this->config = $config;
+    $this->providers = $providers;
   }
 
   protected function configure() {
@@ -36,10 +35,9 @@ class ShowCommand extends Command {
       $table->addRow(array($default['version'], $default['path']));
     }
 
-    $providers = $this->config->get(Services::PROVIDER_SERVICE);
-    $versions = $providers->listAll();
+    $versions = $this->providers->listAll();
     foreach ($versions as $version) {
-      $bin_dir = $providers->getBinary($version);
+      $bin_dir = $this->providers->getBinary($version);
       $table->addRow(array($version, $bin_dir . '/php'));
     }
 
