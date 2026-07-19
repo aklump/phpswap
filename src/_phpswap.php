@@ -28,7 +28,7 @@ $providers = $config->get(Services::PROVIDER_SERVICE);
 
 $app = new Application();
 $app->setName('phpswap');
-$app->setVersion('0.0.14');
+$app->setVersion('0.0.15');
 $app->add(new ShowCommand($providers));
 $app->add(new DiagnoseCommand($providers));
 $app->add(new StatusCommand());
