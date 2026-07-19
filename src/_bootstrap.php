@@ -6,7 +6,9 @@ use AKlump\PhpSwap\Provider\Mamp;
 use AKlump\PhpSwap\Services;
 
 $config = new ConfigContainer();
-$config_file = dirname(__DIR__) . '/init/' . ConfigContainer::CONFIG_FILENAME;
+// Do not try to include the file from the init/ folder; that's only to be used
+// for repairing an installation.
+$config_file = dirname(__DIR__) . '/' . ConfigContainer::CONFIG_FILENAME;
 if (file_exists($config_file)) {
   require $config_file;
 }

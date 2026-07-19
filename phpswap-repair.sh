@@ -10,12 +10,34 @@ x(){ echo "No script dir" >&2;return 1 2>/dev/null||exit 1;};if [ -n "${BASH_VER
 cd "$__DIR__"
 
 # @see composer.json
-[[ -f phpswap.config.php ]] || cp init/phpswap.config.php .
+# Must match \AKlump\PhpSwap\ConfigContainer::CONFIG_FILENAME.
+CONFIG_FILENAME="phpswap.config.php"
+CONFIG_FILE="$__DIR__/$CONFIG_FILENAME"
+CONFIG_TEMPLATE="$__DIR__/init/$CONFIG_FILENAME"
 
-PHP="$(command -v php || true)"
+if [[ ! -f "$CONFIG_FILE" ]]; then
+  if [[ ! -f "$CONFIG_TEMPLATE" ]]; then
+    echo "❌ Config template missing: $CONFIG_TEMPLATE" >&2
+    exit 1
+  fi
+  cp "$CONFIG_TEMPLATE" "$CONFIG_FILE"
+fi
+
+# Extract existing runtime PHP from config.
+current_runtime_php="$(awk -F"'" '/^[[:space:]]*\$config->setRuntimePhp\(/ { print $2; exit }' "$CONFIG_FILE")"
+
+# Determine which PHP to use for repair and potential config update.
+if [[ -n "$current_runtime_php" ]] && [[ -x "$current_runtime_php" ]]; then
+  PHP="$current_runtime_php"
+  SHOULD_UPDATE_CONFIG=0
+else
+  PHP="$(command -v php || true)"
+  SHOULD_UPDATE_CONFIG=1
+fi
+
 if [[ -z "$PHP" ]] || [[ ! -x "$PHP" ]]; then
-  echo "❌ No executable php found in PATH." >&2
-  echo "Put the PHP version you want PhpSwap to use first in PATH, then run:" >&2
+  echo "❌ No executable php found." >&2
+  echo "Put the PHP version you want PhpSwap to use first in PATH, or configure it in $CONFIG_FILENAME, then run:" >&2
   echo "  cd \"$__DIR__\"" >&2
   echo "  ./phpswap-repair.sh" >&2
   exit 1
@@ -27,18 +49,32 @@ if [[ -z "$PHP_VERSION" ]]; then
   exit 1
 fi
 
-PHP_BIN_DIR="$(dirname "$PHP")"
-PHPSWAP_RUNTIME_FILE="$__DIR__/.phpswap-runtime"
+if [[ "$SHOULD_UPDATE_CONFIG" -eq 1 ]]; then
+  escaped_php_path="${PHP//\'/\'\\\\\'\'}"
+  runtime_line="\$config->setRuntimePhp('$escaped_php_path');"
 
-cat > "$PHPSWAP_RUNTIME_FILE" <<EOF
-#!/bin/bash
-#[Config(php: $PHP_VERSION)]
-export PATH="$PHP_BIN_DIR:\$PATH"
-EOF
+  tmp_file="$(mktemp)"
+  if grep -q '^[[:space:]]*\$config->setRuntimePhp(' "$CONFIG_FILE"; then
+    awk -v line="$runtime_line" '
+      /^[[:space:]]*\$config->setRuntimePhp\(/ {
+        print line
+        next
+      }
+      { print }
+    ' "$CONFIG_FILE" > "$tmp_file"
+  else
+    cat "$CONFIG_FILE" > "$tmp_file"
+    {
+      echo
+      echo "# Runtime PHP used to run PhpSwap itself. Managed by phpswap-repair.sh."
+      echo "$runtime_line"
+    } >> "$tmp_file"
+  fi
 
-chmod 0755 "$PHPSWAP_RUNTIME_FILE"
+  mv "$tmp_file" "$CONFIG_FILE"
+  echo "✅ Updated $CONFIG_FILENAME"
+fi
 
-echo "✅ Wrote $PHPSWAP_RUNTIME_FILE"
 echo "👉 Runtime PHP: $PHP"
 echo "👉 Runtime PHP version: $PHP_VERSION"
 

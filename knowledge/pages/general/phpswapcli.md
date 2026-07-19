@@ -74,6 +74,31 @@ To delete the swap file and restore the default PHP for the current session:
 phpswap --delete
 ```
 
+## Configuration
+
+PhpSwap is configured via `phpswap.config.php` located in the application root. If this file is missing, you can create it by running `./phpswap-repair.sh`.
+
+### Runtime PHP
+
+The runtime PHP is the PHP version used by PhpSwap itself to run its internal controller. This is managed automatically by `phpswap-repair.sh`, which writes the following to your config:
+
+```php
+$config->setRuntimePhp('/path/to/php/bin/php');
+```
+
+`phpswap-repair.sh` will only update this line if it is currently empty or points to an invalid PHP binary. This allows you to manually override the runtime PHP if needed.
+
+### Providers
+
+You can control which PHP providers are used and their priority order in `phpswap.config.php`:
+
+```php
+$config->addPhpProvider(new \AKlump\PhpSwap\Provider\Homebrew());
+$config->addPhpProvider(new \AKlump\PhpSwap\Provider\Mamp());
+```
+
+The first provider added has the highest priority when resolving PHP versions.
+
 ## Terms
 
 - **swapped**: PhpSwap is currently overriding the default PHP in this shell session.
@@ -104,4 +129,17 @@ function phpswap_autoswap {
 }
 autoload -Uz add-zsh-hook
 add-zsh-hook chpwd phpswap_autoswap
+```
+
+### Setup in Bash
+
+Add the following to _.bashrc_ or _.bash_profile_, adjusting the path to phpswap.sh as appropriate.
+
+```shell
+# PhpSwap functionality to auto-swap PHP when cd-ing into a project.
+# @url https://github.com/aklump/phpswap
+function cd {
+  builtin cd "$@" || return
+  [[ -f ".phpswap" ]] && source ~/Code/Packages/cli/phpswap/app/phpswap.sh
+}
 ```

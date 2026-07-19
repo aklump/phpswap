@@ -19,6 +19,12 @@ class ConfigContainer  {
     $this->services[Services::PROVIDER_SERVICE] = $reflection->newInstanceArgs($this->providers);
   }
 
+  public function setRuntimePhp($php_path) {
+    $this->services[Services::RUNTIME_PHP] = $php_path;
+
+    return $this;
+  }
+
   /**
    * @inheritDoc
    */

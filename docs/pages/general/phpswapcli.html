@@ -80,6 +80,19 @@
 <p>To delete the swap file and restore the default PHP for the current session:</p>
 <pre><code class="shell">phpswap --delete
 </code></pre>
+<h2>Configuration</h2>
+<p>PhpSwap is configured via <code>phpswap.config.php</code> located in the application root. If this file is missing, you can create it by running <code>./phpswap-repair.sh</code>.</p>
+<h3>Runtime PHP</h3>
+<p>The runtime PHP is the PHP version used by PhpSwap itself to run its internal controller. This is managed automatically by <code>phpswap-repair.sh</code>, which writes the following to your config:</p>
+<pre><code class="php">$config-&gt;setRuntimePhp('/path/to/php/bin/php');
+</code></pre>
+<p><code>phpswap-repair.sh</code> will only update this line if it is currently empty or points to an invalid PHP binary. This allows you to manually override the runtime PHP if needed.</p>
+<h3>Providers</h3>
+<p>You can control which PHP providers are used and their priority order in <code>phpswap.config.php</code>:</p>
+<pre><code class="php">$config-&gt;addPhpProvider(new \AKlump\PhpSwap\Provider\Homebrew());
+$config-&gt;addPhpProvider(new \AKlump\PhpSwap\Provider\Mamp());
+</code></pre>
+<p>The first provider added has the highest priority when resolving PHP versions.</p>
 <h2>Terms</h2>
 <ul>
 <li><strong>swapped</strong>: PhpSwap is currently overriding the default PHP in this shell session.</li>

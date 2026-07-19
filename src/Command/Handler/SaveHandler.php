@@ -15,6 +15,14 @@ class SaveHandler
 {
     public function handle(InputInterface $input, OutputInterface $output, ShellActionList $actions, ProviderService $phpswap_providers)
     {
+        $app_root = realpath(__DIR__ . '/../../../');
+        $current_dir = realpath(getcwd());
+        if ($current_dir === $app_root || strpos($current_dir, $app_root . DIRECTORY_SEPARATOR) === 0) {
+            $actions->add(ShellAction::message('Saving is not allowed inside the PhpSwap application directory.', 'stderr'));
+
+            return;
+        }
+
         $getCurrentPhp = new GetCurrentPhp();
         $current = $getCurrentPhp();
 
@@ -45,8 +53,6 @@ class SaveHandler
         $save_path = getcwd() . '/.phpswap';
         $writePhpSwapFile = new WritePhpSwapFile();
         if ($writePhpSwapFile($save_path, $version, $provider, $all_binaries)) {
-            $actions->add(ShellAction::storeOriginalPath());
-            $actions->add(ShellAction::sourceFile($save_path));
             $actions->add(ShellAction::setEnv('PHPSWAP', $save_path));
             $actions->add(ShellAction::message(sprintf('Saved current PHP %s to swap file: %s', $version, $save_path)));
         } else {

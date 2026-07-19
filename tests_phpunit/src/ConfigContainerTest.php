@@ -43,4 +43,17 @@ class ConfigContainerTest extends TestCase {
     $config->addPhpProvider($provider);
     $this->assertTrue($config->has(Services::PROVIDER_SERVICE));
   }
+
+  public function testSetRuntimePhpStoresBinaryPath() {
+    $config = new ConfigContainer();
+    $config->setRuntimePhp('/usr/local/bin/php');
+    $this->assertEquals('/usr/local/bin/php', $config->get(Services::RUNTIME_PHP));
+  }
+
+  public function testRuntimePhpServiceCanBeCheckedWithHas() {
+    $config = new ConfigContainer();
+    $this->assertFalse($config->has(Services::RUNTIME_PHP));
+    $config->setRuntimePhp('/usr/local/bin/php');
+    $this->assertTrue($config->has(Services::RUNTIME_PHP));
+  }
 }

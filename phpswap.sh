@@ -12,23 +12,27 @@ PHP_CONTROLLER="$__DIR__/src/_phpswap.php"
 export PHPSWAP_SH="$__DIR__/phpswap.sh"
 
 # ========= Runtime PHP =========
-PHPSWAP_RUNTIME_FILE="$__DIR__/.phpswap-runtime"
+CONFIG_FILE="$__DIR__/phpswap.config.php"
 
-if [[ ! -f "$PHPSWAP_RUNTIME_FILE" ]]; then
-  echo "❌ PhpSwap runtime PHP is not configured." >&2
-  echo >&2
+if [[ ! -f "$CONFIG_FILE" ]]; then
+  echo "❌ PhpSwap configuration is missing: $CONFIG_FILE" >&2
   echo "To repair this global PhpSwap installation:" >&2
   echo "  cd \"$__DIR__\" && ./phpswap-repair.sh" >&2
-  echo >&2
-  echo "Then source PhpSwap again." >&2
   return 1
 fi
 
-source "$PHPSWAP_RUNTIME_FILE"
-PHPSWAP_RUNTIME_PHP="$(command -v php)"
+runtime_php="$(awk -F"'" '/^[[:space:]]*\$config->setRuntimePhp\(/ { print $2; exit }' "$CONFIG_FILE")"
+if [[ -z "$runtime_php" ]]; then
+  echo "❌ PhpSwap runtime PHP is not configured in $CONFIG_FILE." >&2
+  echo "To repair this global PhpSwap installation:" >&2
+  echo "  cd \"$__DIR__\" && ./phpswap-repair.sh" >&2
+  return 1
+fi
+
+PHPSWAP_RUNTIME_PHP="$runtime_php"
 
 if [[ -z "$PHPSWAP_RUNTIME_PHP" ]] || [[ ! -x "$PHPSWAP_RUNTIME_PHP" ]]; then
-  echo "❌ PhpSwap runtime PHP could not be resolved from $PHPSWAP_RUNTIME_FILE." >&2
+  echo "❌ PhpSwap runtime PHP could not be resolved from $CONFIG_FILE." >&2
   echo "To repair this global PhpSwap installation:" >&2
   echo "  cd \"$__DIR__\" && ./phpswap-repair.sh" >&2
   return 1
