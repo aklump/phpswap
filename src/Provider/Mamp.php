@@ -58,12 +58,12 @@ class Mamp implements ProviderInterface {
           self::$files[$matches[1]] = $item->getPathname();
         }
       }
-      uksort(self::$files, function ($a, $b) {
-        return version_compare($a, $b);
-      });
     }
 
     return self::$files;
   }
 
+  public function getPriority() {
+    return 0;
+  }
 }

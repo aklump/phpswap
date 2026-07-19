@@ -32,4 +32,10 @@ interface ProviderInterface {
    */
   public function getBinary($version);
 
+  /**
+   * @return int A higher priority will take precedence when an exact version
+   * conflict is found.
+   */
+  public function getPriority();
+
 }

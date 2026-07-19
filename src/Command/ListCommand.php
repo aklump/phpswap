@@ -2,6 +2,7 @@
 
 namespace AKlump\PhpSwap\Command;
 
+use AKlump\PhpSwap\Helper\ProviderService;
 use AKlump\PhpSwap\Provider\Mamp;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,8 +18,8 @@ class ListCommand extends Command {
   }
 
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $provider = new Mamp();
-    $output->write($provider->listAll(), true);
+    $service = new ProviderService(new Mamp());
+    $output->write($service->listAll(), TRUE);
 
     return 0;
   }
