@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `phpswap diagnose` command to identify broken PHP binaries.
+- Homebrew PHP provider.
+- JSON shell-action contract for safe shell mutation.
+- `phpswap status --verbose` to show raw environment variables.
+
+### Changed
+- Complete rebuild of the CLI architecture around a central PHP controller and thin Bash adapter.
+- `phpswap --save` is now non-interactive and saves the currently active PHP version.
+- `phpswap status` now provides a cleaner, more concise summary.
+- Standardized terminology: swapped, saved, swap file, default PHP, provider.
+- Improved Homebrew PHP discovery including Cellar scanning and broken binary detection.
+- Refactored `phpswap --delete` to always unset the session and restore default PHP.
+
+### Removed
+- Legacy Bash-based command implementations in `phpswap.sh`.
+- Terminology: shim, persistent file.
+
 ## [0.0.13] - 2025-05-10
 
 ### Added

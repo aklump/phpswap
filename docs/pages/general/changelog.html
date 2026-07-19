@@ -7,7 +7,7 @@
       <link rel="stylesheet" href="../../dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=0.0.14">
       <link rel="stylesheet" href="../../dist/dist/bootstrap_theme.css?ver=0.0.14">
       <link rel="stylesheet" href="../../dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=0.0.14">
-        <title>Changelog | Book</title>
+        <title>Changelog | PhpSwap</title>
   </head>
 <body class="my-5">
 
@@ -18,7 +18,7 @@
         <nav aria-label="breadcrumb">
   <ol class="breadcrumb mb-0">
         <li class="breadcrumb-item">
-      <a class="fw-bold" href="../../index.html">Book</a>
+      <a class="fw-bold" href="../../index.html">PhpSwap</a>
     </li>
     <li class="breadcrumb-item">
       <a class="fw-bold" href="#" data-bs-toggle="offcanvas"
@@ -32,8 +32,8 @@
 
       </div>
       <div class="header__tags me-3">  </div>
-      <div class="header__page-numbers flex-shrink-1">2
-        / 4</div>
+      <div class="header__page-numbers flex-shrink-1">5
+        / 7</div>
     </div>
   </div>
 </header>
@@ -46,6 +46,27 @@
 <p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>,
 and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
 <h2>[Unreleased]</h2>
+<h3>Added</h3>
+<ul>
+<li><code>phpswap diagnose</code> command to identify broken PHP binaries.</li>
+<li>Homebrew PHP provider.</li>
+<li>JSON shell-action contract for safe shell mutation.</li>
+<li><code>phpswap status --verbose</code> to show raw environment variables.</li>
+</ul>
+<h3>Changed</h3>
+<ul>
+<li>Complete rebuild of the CLI architecture around a central PHP controller and thin Bash adapter.</li>
+<li><code>phpswap --save</code> is now non-interactive and saves the currently active PHP version.</li>
+<li><code>phpswap status</code> now provides a cleaner, more concise summary.</li>
+<li>Standardized terminology: swapped, saved, swap file, default PHP, provider.</li>
+<li>Improved Homebrew PHP discovery including Cellar scanning and broken binary detection.</li>
+<li>Refactored <code>phpswap --delete</code> to always unset the session and restore default PHP.</li>
+</ul>
+<h3>Removed</h3>
+<ul>
+<li>Legacy Bash-based command implementations in <code>phpswap.sh</code>.</li>
+<li>Terminology: shim, persistent file.</li>
+</ul>
 <h2>[0.0.13] - 2025-05-10</h2>
 <h3>Added</h3>
 <ul>
@@ -90,7 +111,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
               Version:
         <strong>0.0.14</strong>
         &bull;
-                    Last Update: <strong>7/18/2026</strong>
+                    Last Update: <strong>7/19/2026</strong>
           </div>
   </footer>
 
@@ -99,10 +120,10 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
   fixed-bottom">
   <div class="btn-group flex-fill">
               <a href="readme.html" class="btn nav__prev-chapter btn-secondary"><i class="bi
-      bi-caret-left-fill"></i> PHP Swap</a>
+      bi-caret-left-fill"></i> PhpSwap</a>
   
     
-              <a href="readme.html" class="btn nav__prev-page js-nav__prev-page
+              <a href="examples.html" class="btn nav__prev-page js-nav__prev-page
     btn-primary"><i class="bi
       bi-caret-left-fill"></i></a>
   
@@ -113,8 +134,8 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
        aria-controls="table-of-contents"><i class="bi
            bi-list-ol"></i></a>
     
-              <a href="phpswapcli.html" class="btn nav__next-page js-nav__next-page
-    btn-primary"><i class="bi bi-file-earmark"></i> PhpSwap CLI <i class="bi
+              <a href="../providers/homebrew.html" class="btn nav__next-page js-nav__next-page
+    btn-primary"><i class="bi bi-file-earmark"></i> Homebrew PHP Provider <i class="bi
        bi-caret-right-fill"></i></a>
   
     
@@ -143,21 +164,21 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
         <h2 class="h4 mt-4">Matched Pages</h2>
         <ol class="list-unstyled">
                                               <li data-page="readme" value="1">
-      <a class="js-page-link" href="readme.html">PHP Swap<span
+      <a class="js-page-link" href="readme.html">PhpSwap<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="changelog" value="2">
-      <a class="js-page-link" href="changelog.html">Changelog<span
-              class="js-search-score
-              badge
-              bg-info rounded-pill badge-sm"></span></a>
-    </li>
-  
-                                    <li data-page="phpswapcli" value="3">
+                                    <li data-page="phpswapcli" value="2">
       <a class="js-page-link" href="phpswapcli.html">PhpSwap CLI<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="testing" value="3">
+      <a class="js-page-link" href="testing.html">Multi-PHP Testing<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
@@ -170,6 +191,27 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
+                                    <li data-page="changelog" value="5">
+      <a class="js-page-link" href="changelog.html">Changelog<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                                          <li data-page="homebrew" value="6">
+      <a class="js-page-link" href="../providers/homebrew.html">Homebrew PHP Provider<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="mamp" value="7">
+      <a class="js-page-link" href="../providers/mamp.html">MAMP PHP Provider<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
                               </ol>
       </div>
         
@@ -177,19 +219,34 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
               <h2 class="h4 mt-4">General</h2>
         <ol>
                                 <li data-page="readme" value="1">
-      <a class="js-page-link" href="readme.html">PHP Swap</a>
+      <a class="js-page-link" href="readme.html">PhpSwap</a>
     </li>
   
-                                <li data-page="changelog" value="2">
-      <a class="js-page-link" href="changelog.html">Changelog</a>
-    </li>
-  
-                                <li data-page="phpswapcli" value="3">
+                                <li data-page="phpswapcli" value="2">
       <a class="js-page-link" href="phpswapcli.html">PhpSwap CLI</a>
+    </li>
+  
+                                <li data-page="testing" value="3">
+      <a class="js-page-link" href="testing.html">Multi-PHP Testing</a>
     </li>
   
                                 <li data-page="examples" value="4">
       <a class="js-page-link" href="examples.html">Examples</a>
+    </li>
+  
+                                <li data-page="changelog" value="5">
+      <a class="js-page-link" href="changelog.html">Changelog</a>
+    </li>
+  
+                  </ol>
+              <h2 class="h4 mt-4">Providers</h2>
+        <ol>
+                                <li data-page="homebrew" value="6">
+      <a class="js-page-link" href="../providers/homebrew.html">Homebrew PHP Provider</a>
+    </li>
+  
+                                <li data-page="mamp" value="7">
+      <a class="js-page-link" href="../providers/mamp.html">MAMP PHP Provider</a>
     </li>
   
                   </ol>
@@ -211,13 +268,19 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
                 
         <ul class="list-group list-group-flush">
                                     <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="readme.html">PHP Swap</a>
-                                                <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="changelog.html">Changelog</a>
+                 data-tags="[]" href="readme.html">PhpSwap</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="phpswapcli.html">PhpSwap CLI</a>
                                                 <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="testing.html">Multi-PHP Testing</a>
+                                                <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="examples.html">Examples</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="changelog.html">Changelog</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="../providers/homebrew.html">Homebrew PHP Provider</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="../providers/mamp.html">MAMP PHP Provider</a>
                               </ul>
       </div>
     </div>

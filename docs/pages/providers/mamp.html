@@ -7,7 +7,7 @@
       <link rel="stylesheet" href="../../dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=0.0.14">
       <link rel="stylesheet" href="../../dist/dist/bootstrap_theme.css?ver=0.0.14">
       <link rel="stylesheet" href="../../dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=0.0.14">
-        <title>Examples | PhpSwap</title>
+        <title>MAMP PHP Provider | PhpSwap</title>
   </head>
 <body class="my-5">
 
@@ -26,13 +26,13 @@
          aria-controls="table-of-contents">TOC</a>
     </li>
     <li class="breadcrumb-item">
-      <a href="readme.html">General</a></li>
+      <a href="homebrew.html">Providers</a></li>
   </ol>
 </nav>
 
       </div>
       <div class="header__tags me-3">  </div>
-      <div class="header__page-numbers flex-shrink-1">4
+      <div class="header__page-numbers flex-shrink-1">7
         / 7</div>
     </div>
   </div>
@@ -41,104 +41,58 @@
 <main class="container-md flex-column">
   <div class="row mb-5 pt-5">
     <article class="col">
-      <h1 class="mb-4 text-primary">Examples</h1>
-      <h2>Boilerplate Runner</h2>
-<p><strong>File:</strong> <code>run_multi_phpunit_tests.sh</code></p>
-<pre><code class="bash">#!/usr/bin/env bash
-s="${BASH_SOURCE[0]}";[[ "$s" ]] || s="${(%):-%N}";while [ -h "$s" ];do d="$(cd -P "$(dirname "$s")" &amp;&amp; pwd)";s="$(readlink "$s")";[[ $s != /* ]] &amp;&amp; s="$d/$s";done;__DIR__=$(cd -P "$(dirname "$s")" &amp;&amp; pwd)
-
-cd "$__DIR__/.."
-
-function failed() {
-  local message="$1"
-
-  NO_FORMAT="\033[0m"
-  F_BOLD="\033[1m"
-  C_YELLOW="\033[48;5;226m"
- echo -e "${F_BOLD}${C_YELLOW}$message${NO_FORMAT}"
-}
-
-
-error=false
-message="                                                                        "
-if ! [ -e ./vendor/bin/phpswap ]; then
-  error=true
-  message="$message\n     You seem to be missing this: https://github.com/aklump/phpswap     "
-  message="$message\n     Try running: composer require --dev aklump/phpswap                 "
-fi
-if ! [ -e ./vendor/bin/phpunit ]; then
-  error=true
-  message="$message\n     You seem to be missing this: PHPUnit                               "
-  message="$message\n     Try running: composer require --dev phpunit/phpunit                "
-fi
-if [[ "$error" == true ]]; then
-    message="$message\n                                                                        "
-    failed "$message"
-    exit 1
-fi
-
-verbose=''
-if [[ "${*}" == *'-v'* ]]; then
-  verbose='-v'
-fi
-! ./vendor/bin/phpswap use 7.3 $verbose './vendor/bin/phpunit -c ___unit_tests_dir/phpunit.xml' &amp;&amp; failed "     PHP 7.3 tests failed.     " &amp;&amp; exit 1
-! ./vendor/bin/phpswap use 7.4 $verbose './vendor/bin/phpunit -c ___unit_tests_dir/phpunit.xml' &amp;&amp; failed "     PHP 7.4 tests failed.     " &amp;&amp; exit 1
-! ./vendor/bin/phpswap use 8.0 $verbose './vendor/bin/phpunit -c ___unit_tests_dir/phpunit.xml' &amp;&amp; failed "     PHP 8.0 tests failed.     " &amp;&amp; exit 1
-! ./vendor/bin/phpswap use 8.1 $verbose './vendor/bin/phpunit -c ___unit_tests_dir/phpunit.xml' &amp;&amp; failed "     PHP 8.1 tests failed.     " &amp;&amp; exit 1
-! ./vendor/bin/phpswap use 8.2 $verbose './vendor/bin/phpunit -c ___unit_tests_dir/phpunit.xml' &amp;&amp; failed "     PHP 8.2 tests failed.     " &amp;&amp; exit 1
-! ./vendor/bin/phpswap use 8.3 $verbose './vendor/bin/phpunit -c ___unit_tests_dir/phpunit.xml' &amp;&amp; failed "     PHP 8.3 tests failed.     " &amp;&amp; exit 1
-! ./vendor/bin/phpswap use 8.4 $verbose './vendor/bin/phpunit -c ___unit_tests_dir/phpunit.xml' &amp;&amp; failed "     PHP 8.4 tests failed.     " &amp;&amp; exit 1
+      <h1 class="mb-4 text-primary">MAMP PHP Provider</h1>
+      <p>PhpSwap can discover PHP versions bundled with MAMP and switch the current shell session to them.</p>
+<h2>What it does</h2>
+<p>PhpSwap scans your MAMP installation to find available PHP versions. This allows you to easily switch between different PHP versions provided by MAMP for your development projects.</p>
+<h2>Installing MAMP</h2>
+<p>You can download and install MAMP from the official website:</p>
+<p><a href="https://www.mamp.info/en/mamp/mac/">https://www.mamp.info/en/mamp/mac/</a></p>
+<h2>Expected path</h2>
+<p>The MAMP provider expects to find MAMP at the following location:</p>
+<p><code>/Applications/MAMP</code></p>
+<p>PHP versions should be located under:</p>
+<p><code>/Applications/MAMP/bin/php</code></p>
+<p>Example path to a PHP binary:</p>
+<p><code>/Applications/MAMP/bin/php/php8.4.11/bin/php</code></p>
+<h2>Checking installed MAMP PHP versions</h2>
+<p>You can see which PHP versions are available in MAMP by listing the contents of the MAMP PHP directory:</p>
+<pre><code class="shell cript">ls /Applications/MAMP/bin/php
 </code></pre>
-<h2>Running Tests with a PHP Server</h2>
-<p><strong>File:</strong> <code>with_server.sh</code></p>
-<pre><code class="bash">#!/usr/bin/env bash
-x(){ echo "No script dir" &gt;&amp;2;return 1 2&gt;/dev/null||exit 1;};if [ -n "${BASH_VERSION:-}" ];then s="${BASH_SOURCE[0]}";elif [ -n "${ZSH_VERSION:-}" ];then eval 's="${(%):-%x}"';else x;fi;[ -n "$s" ]||x;while [ -h "$s" ];do d="$(cd -P "$(dirname "$s")"&amp;&amp;pwd)"||x;s="$(readlink "$s")"||x;[[ $s != /* ]]&amp;&amp;s="$d/$s";done;__DIR__="$(cd -P "$(dirname "$s")"&amp;&amp;pwd)"||x;unset s d;unset -f x
-
-cd "$__DIR__/.."
-
-! [ -e ./vendor/bin/phpswap ] &amp;&amp; echo "You seem to be missing this: https://github.com/aklump/phpswap" &amp;&amp; echo "Try running: composer require --dev aklump/phpswap" &amp;&amp; exit 1
-
-verbose=''
-if [[ "${*}" == *'-v'* ]]; then
-  verbose='-v'
-fi
-
-function start_server() {
-  local version=$1
-
-  PHP=$(./vendor/bin/phpswap use $version 'command -v php')
-  # Use a subshell for the background process to suppress "Terminated" messages
-  # when the process is eventually killed.
-  { exec $PHP -S 127.0.0.1:8080 -t "$__DIR__/../web" &amp;&gt;/dev/null; } &amp; disown
-  while ! nc -z 127.0.0.1 8080 2&gt;/dev/null; do
-    sleep 0.1
-  done
-}
-
-function stop_server() {
-  (lsof -t -i:8080 | xargs kill 2&gt;/dev/null) 2&gt;/dev/null
-  while nc -z 127.0.0.1 8080 2&gt;/dev/null; do
-    sleep 0.1
-  done
-}
-
-function run_tests() {
-  local version=$1
-
-  stop_server
-  start_server "$version"
-  ./vendor/bin/phpswap use "$version" $verbose './vendor/bin/phpunit -c tests_phpunit'
-  stop_server
-  echo
-}
-
-run_tests 7.3
-run_tests 7.4
-run_tests 8.0
-run_tests 8.1
-run_tests 8.2
-run_tests 8.3
-run_tests 8.4
+<p>Example output:</p>
+<pre><code class="plain ext">php8.2.29
+php8.3.24
+php8.4.11
+</code></pre>
+<p>You can check the version of a specific MAMP PHP binary:</p>
+<pre><code class="shell cript">/Applications/MAMP/bin/php/php8.4.11/bin/php -v
+</code></pre>
+<h2>Using with PhpSwap</h2>
+<p>Once MAMP is installed, its PHP versions will be available in PhpSwap:</p>
+<pre><code class="shell cript">phpswap show
+phpswap --set
+phpswap --save
+</code></pre>
+<h2>Diagnosing PHP binaries</h2>
+<p>Run:
+<code>`</code>shell script
+phpswap diagnose
+<code>`</code>
+This checks discovered MAMP PHP binaries by running <code>php -v</code>.</p>
+<p>If a MAMP PHP binary fails, verify it directly:
+<code>`</code>shell script
+/Applications/MAMP/bin/php/php8.4.11/bin/php -v
+<code>`</code></p>
+<h2>Provider priority</h2>
+<p>MAMP has lower priority than Homebrew. If both MAMP and Homebrew provide the same exact PHP version, PhpSwap will prioritize the Homebrew version. MAMP versions will still appear in <code>phpswap show</code> as long as they are not overridden by a higher-priority provider with the same version.</p>
+<h2>Troubleshooting</h2>
+<h3>MAMP cannot be found</h3>
+<p>Ensure MAMP is installed at the expected path: <code>/Applications/MAMP</code>.</p>
+<h3>Missing PHP directory</h3>
+<p>Check that the PHP directory exists within MAMP: <code>/Applications/MAMP/bin/php</code>.</p>
+<h3>Version does not appear</h3>
+<p>If a version doesn't appear in PhpSwap, verify it exists in the MAMP directory:</p>
+<pre><code class="shell cript">ls /Applications/MAMP/bin/php
 </code></pre>
     </article>
   </div>
@@ -157,11 +111,11 @@ run_tests 8.4
 <nav class="nav d-flex justify-content-center align-items-center
   fixed-bottom">
   <div class="btn-group flex-fill">
-              <a href="readme.html" class="btn nav__prev-chapter btn-secondary"><i class="bi
-      bi-caret-left-fill"></i> PhpSwap</a>
+              <a href="homebrew.html" class="btn nav__prev-chapter btn-secondary"><i class="bi
+      bi-caret-left-fill"></i> Homebrew PHP Provider</a>
   
     
-              <a href="testing.html" class="btn nav__prev-page js-nav__prev-page
+              <a href="homebrew.html" class="btn nav__prev-page js-nav__prev-page
     btn-primary"><i class="bi
       bi-caret-left-fill"></i></a>
   
@@ -172,9 +126,8 @@ run_tests 8.4
        aria-controls="table-of-contents"><i class="bi
            bi-list-ol"></i></a>
     
-              <a href="changelog.html" class="btn nav__next-page js-nav__next-page
-    btn-primary"><i class="bi bi-file-earmark"></i> Changelog <i class="bi
-       bi-caret-right-fill"></i></a>
+              <span class="btn nav__next-page js-nav__next-page
+    btn-primary"></span>
   
     
               <span class="btn nav__next-chapter btn-secondary "></span>
@@ -202,49 +155,49 @@ run_tests 8.4
         <h2 class="h4 mt-4">Matched Pages</h2>
         <ol class="list-unstyled">
                                               <li data-page="readme" value="1">
-      <a class="js-page-link" href="readme.html">PhpSwap<span
+      <a class="js-page-link" href="../general/readme.html">PhpSwap<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="phpswapcli" value="2">
-      <a class="js-page-link" href="phpswapcli.html">PhpSwap CLI<span
+      <a class="js-page-link" href="../general/phpswapcli.html">PhpSwap CLI<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="testing" value="3">
-      <a class="js-page-link" href="testing.html">Multi-PHP Testing<span
+      <a class="js-page-link" href="../general/testing.html">Multi-PHP Testing<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="examples" value="4">
-      <a class="js-page-link" href="examples.html">Examples<span
+      <a class="js-page-link" href="../general/examples.html">Examples<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="changelog" value="5">
-      <a class="js-page-link" href="changelog.html">Changelog<span
+      <a class="js-page-link" href="../general/changelog.html">Changelog<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                                           <li data-page="homebrew" value="6">
-      <a class="js-page-link" href="../providers/homebrew.html">Homebrew PHP Provider<span
+      <a class="js-page-link" href="homebrew.html">Homebrew PHP Provider<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="mamp" value="7">
-      <a class="js-page-link" href="../providers/mamp.html">MAMP PHP Provider<span
+      <a class="js-page-link" href="mamp.html">MAMP PHP Provider<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
@@ -257,34 +210,34 @@ run_tests 8.4
               <h2 class="h4 mt-4">General</h2>
         <ol>
                                 <li data-page="readme" value="1">
-      <a class="js-page-link" href="readme.html">PhpSwap</a>
+      <a class="js-page-link" href="../general/readme.html">PhpSwap</a>
     </li>
   
                                 <li data-page="phpswapcli" value="2">
-      <a class="js-page-link" href="phpswapcli.html">PhpSwap CLI</a>
+      <a class="js-page-link" href="../general/phpswapcli.html">PhpSwap CLI</a>
     </li>
   
                                 <li data-page="testing" value="3">
-      <a class="js-page-link" href="testing.html">Multi-PHP Testing</a>
+      <a class="js-page-link" href="../general/testing.html">Multi-PHP Testing</a>
     </li>
   
                                 <li data-page="examples" value="4">
-      <a class="js-page-link" href="examples.html">Examples</a>
+      <a class="js-page-link" href="../general/examples.html">Examples</a>
     </li>
   
                                 <li data-page="changelog" value="5">
-      <a class="js-page-link" href="changelog.html">Changelog</a>
+      <a class="js-page-link" href="../general/changelog.html">Changelog</a>
     </li>
   
                   </ol>
               <h2 class="h4 mt-4">Providers</h2>
         <ol>
                                 <li data-page="homebrew" value="6">
-      <a class="js-page-link" href="../providers/homebrew.html">Homebrew PHP Provider</a>
+      <a class="js-page-link" href="homebrew.html">Homebrew PHP Provider</a>
     </li>
   
                                 <li data-page="mamp" value="7">
-      <a class="js-page-link" href="../providers/mamp.html">MAMP PHP Provider</a>
+      <a class="js-page-link" href="mamp.html">MAMP PHP Provider</a>
     </li>
   
                   </ol>
@@ -306,19 +259,19 @@ run_tests 8.4
                 
         <ul class="list-group list-group-flush">
                                     <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="readme.html">PhpSwap</a>
+                 data-tags="[]" href="../general/readme.html">PhpSwap</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="phpswapcli.html">PhpSwap CLI</a>
+                 data-tags="[]" href="../general/phpswapcli.html">PhpSwap CLI</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="testing.html">Multi-PHP Testing</a>
+                 data-tags="[]" href="../general/testing.html">Multi-PHP Testing</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="examples.html">Examples</a>
+                 data-tags="[]" href="../general/examples.html">Examples</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="changelog.html">Changelog</a>
+                 data-tags="[]" href="../general/changelog.html">Changelog</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="../providers/homebrew.html">Homebrew PHP Provider</a>
+                 data-tags="[]" href="homebrew.html">Homebrew PHP Provider</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="../providers/mamp.html">MAMP PHP Provider</a>
+                 data-tags="[]" href="mamp.html">MAMP PHP Provider</a>
                               </ul>
       </div>
     </div>

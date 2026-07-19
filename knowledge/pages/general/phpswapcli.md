@@ -5,74 +5,59 @@ tags: ''
 
 # PhpSwap CLI
 
-This package includes a CLI tool that lets you swap the CLI PHP being used in your terminal. The swap affects the current window only, by modifying and exporting the `$PATH`. Open a new window and the system default PHP will be at play.
+**PhpSwap** is a developer tool for macOS that allows you to instantly switch between different CLI PHP versions. Unlike other tools that change your system's global state, PhpSwap's changes are scoped exclusively to your current terminal session. It automatically discovers PHP binaries from popular sources like **Homebrew** and **MAMP**, and provides a powerful execution engine for automated, multi-version PHP testing with built-in **Composer** dependency management.
 
 ## Installing `phpswap` CLI
 
-Add an alias, which sources the `phpswap` command, adjusting the path as appropriate.
+Add an alias, which sources the `phpswap.sh` script, adjusting the path as appropriate.
 
 ```shell
-alias phpswap="source ~/Code/Packages/cli/phpswap/app/cli/bin/phpswap"
+alias phpswap="source ~/Code/Packages/cli/phpswap/app/phpswap.sh"
 ```
 
 ## Usage
 
 For help type `phpswap -h`
 
-### Register a Project's PHP Version (Permanent)
+### `phpswap show`
+
+Lists all available PHP versions and their binary paths discovered from registered providers.
+
+### `phpswap status`
+
+Shows the currently active PHP version, binary path, and whether the session is currently swapped. It also indicates if a swap file is saved and active.
+
+### `phpswap diagnose`
+
+Scans all discovered PHP binaries and reports any that fail to execute correctly.
+
+### `phpswap`
+
+If a swap file is found in the current directory or a parent directory, PhpSwap will apply it. If no swap file is found, it behaves like `phpswap --set`.
+
+### `phpswap --set` (Temporary Session Swap)
+
+Interactively select a PHP version for the current shell session only. This does not create a swap file.
+
+```shell
+phpswap --set
+```
+
+### `phpswap --save` (Register a Project's PHP Version)
 
 1. In your terminal, `cd` to your project's root directory.
-2. Type `phpswap --save` or `phpswap 8.4 --save`
-3. If prompted, select the version for your project (current plus all child directories).
-5. Test it with `php -v`
+2. Ensure the PHP version you want to save is currently active (e.g., by using `phpswap --set`).
+3. Type `phpswap --save`
+4. Test it with `php -v`
 
-This will create a `.phpswap` file in the current directory.
+This will create a `.phpswap` swap file in the current directory, persisting the currently active PHP version.
 
-### Temporary Session Swap
+### `phpswap --unset` (Resetting the PATH)
 
-By default, `phpswap` only affects the current shell session and does not create a `.phpswap` file.
-
-```shell
-phpswap
-```
-
-You can also specify the version:
-
-```shell
-phpswap 8.1
-```
-
-### Change a Project's PHP Version
-
-To change the version for a configured project, just run `phpswap --save` again.
-
-### Delete a Project's Configuration
-
-To delete the `.phpswap` file in the current directory, use the `--delete` flag:
-
-```shell
-phpswap --delete
-```
-
-### Swap the Version
-
-Once a project's version has been registered, you may swap the active PHP using `phpswap` from inside that project. Alternately, you can setup up _Auto Swap_ (see below).
-
-```shell
-cd my/great/project
-phpswap
-```
-
-## PATH Management
-
-PhpSwap tracks the PHP binary path it adds to `$PATH` using `PHPSWAP_ACTIVE_PATH`. Before each swap, it removes that previous active path from the current `$PATH`, updates `PHPSWAP_ORIGINAL_PATH`, and then prepends the newly selected PHP binary path. This prevents duplicate PhpSwap entries while preserving unrelated `$PATH` changes made by other tools during the shell session.
-
-### Resetting the PATH
-
-If you want to return to your non-PhpSwap path, you can run:
+If you want to return to your default PHP version, you can run:
 
 ```shell script
-phpswap -r
+phpswap --unset
 ```
 
 or the legacy command:
@@ -81,29 +66,41 @@ or the legacy command:
 phpswap reset
 ```
 
-Or manually:
+### `phpswap --delete` (Delete a Project's Configuration)
 
-```shell script
-export PATH="$PHPSWAP_ORIGINAL_PATH"
-unset PHPSWAP_ORIGINAL_PATH
-unset PHPSWAP_ACTIVE_PATH
+To delete the swap file and restore the default PHP for the current session:
+
+```shell
+phpswap --delete
 ```
+
+## Terms
+
+- **swapped**: PhpSwap is currently overriding the default PHP in this shell session.
+- **saved**: A `.phpswap` swap file exists in the current directory or a parent directory.
+- **swap file**: The `.phpswap` file that stores a project’s saved PHP version.
+- **default PHP**: The PHP that would be used if PhpSwap were not active.
+- **provider**: A source of PHP binaries, such as Homebrew or MAMP.
+
+## PATH Management
+
+PhpSwap tracks the PHP binary path it adds to `$PATH` using `PHPSWAP_ACTIVE_PATH`. Before each swap, it removes that previous active path from the current `$PATH`, updates `PHPSWAP_ORIGINAL_PATH`, and then prepends the newly selected PHP binary path. This prevents duplicate PhpSwap entries while preserving unrelated `$PATH` changes made by other tools during the shell session.
 
 ## Auto Swap on Directory Change
 
-You may configure PhpSwap to automatically swap PHP when you change directories. If that directory <s>or one of it's child directories</s>, has been setup with a PhpSwap version, PhpSwap will read that version and automatically swap. This saves you from having to manually type `phpswap`.
+You may configure PhpSwap to automatically swap PHP when you change directories. If that directory has been setup with a swap file, PhpSwap will read that version and automatically swap. This saves you from having to manually type `phpswap`.
 
 **Note: autoswap only works when changing to a directory that contains _.phpswap_**. That is, child directories will not autoswap, whereas **manually typing `phpswap` in a child directory will swap PHP based on a parent directory's configuration**.
 
 ### Setup in ZShell
 
-Add the following to _.zshrc_, adjusting the path to phpswap as appropriate.
+Add the following to _.zshrc_, adjusting the path to phpswap.sh as appropriate.
 
 ```shell
 # PhpSwap functionality to auto-swap PHP when cd-ing into a project.
 # @url https://github.com/aklump/phpswap
 function phpswap_autoswap {
-  [[ -f ".phpswap" ]] && source ~/Code/Packages/cli/phpswap/app/cli/bin/phpswap
+  [[ -f ".phpswap" ]] && source ~/Code/Packages/cli/phpswap/app/phpswap.sh
 }
 autoload -Uz add-zsh-hook
 add-zsh-hook chpwd phpswap_autoswap
