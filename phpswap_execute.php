@@ -20,11 +20,10 @@
  * in this file.
  */
 
+use AKlump\PhpSwap\ConfigContainer;
 use AKlump\PhpSwap\Execute\Execute;
 use AKlump\PhpSwap\Helper\Bash;
-use AKlump\PhpSwap\Helper\ProviderService;
-use AKlump\PhpSwap\Provider\Homebrew;
-use AKlump\PhpSwap\Provider\Mamp;
+use AKlump\PhpSwap\Services;
 
 foreach (array(
              __DIR__ . '/../../autoload.php',
@@ -77,10 +76,10 @@ if (!$working_directory) {
 }
 
 try {
-  if (!isset($phpswap_providers) || !($phpswap_providers instanceof \AKlump\PhpSwap\Provider\ProviderInterface)) {
-    $phpswap_providers = new ProviderService(new Homebrew(), new Mamp());
-  }
-  $php_binary = $phpswap_providers->getBinary($version);
+  /** @var ConfigContainer $config */
+  $config = require __DIR__ . '/src/_bootstrap.php';
+  $providers = $config->get(Services::PROVIDER_SERVICE);
+  $php_binary = $providers->getBinary($version);
 
   $execute = new Execute(new Bash(), $php_binary, $options);
   $lines = $execute($working_directory, $executable);

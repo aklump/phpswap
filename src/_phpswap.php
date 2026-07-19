@@ -7,6 +7,7 @@ use AKlump\PhpSwap\Command\PhpSwapCommand;
 use AKlump\PhpSwap\Command\ResetCommand;
 use AKlump\PhpSwap\Command\ShowCommand;
 use AKlump\PhpSwap\Command\StatusCommand;
+use AKlump\PhpSwap\ConfigContainer;
 use Symfony\Component\Console\Application;
 
 foreach ([
@@ -20,15 +21,18 @@ foreach ([
   }
 }
 
+/** @var ConfigContainer $config */
+$config = require __DIR__ . '/_bootstrap.php';
+
 $app = new Application();
 $app->setName('phpswap');
 $app->setVersion('0.0.14');
-$app->add(new ShowCommand());
-$app->add(new DiagnoseCommand());
-$app->add(new StatusCommand());
-$app->add(new ResetCommand());
-$app->add(new ApplyCommand());
-$phpSwapCommand = new PhpSwapCommand();
+$app->add(new ShowCommand($config));
+$app->add(new DiagnoseCommand($config));
+$app->add(new StatusCommand($config));
+$app->add(new ResetCommand($config));
+$app->add(new ApplyCommand($config));
+$phpSwapCommand = new PhpSwapCommand($config);
 $app->add($phpSwapCommand);
 $app->setDefaultCommand($phpSwapCommand->getName());
 $app->run();

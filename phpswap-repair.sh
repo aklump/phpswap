@@ -9,6 +9,9 @@ x(){ echo "No script dir" >&2;return 1 2>/dev/null||exit 1;};if [ -n "${BASH_VER
 
 cd "$__DIR__"
 
+# @see composer.json
+[[ -f phpswap.config.php ]] || cp init/phpswap.config.php .
+
 PHP="$(command -v php || true)"
 if [[ -z "$PHP" ]] || [[ ! -x "$PHP" ]]; then
   echo "❌ No executable php found in PATH." >&2

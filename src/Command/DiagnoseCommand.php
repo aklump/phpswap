@@ -2,11 +2,10 @@
 
 namespace AKlump\PhpSwap\Command;
 
+use AKlump\PhpSwap\ConfigContainer;
 use AKlump\PhpSwap\Diagnostic\PhpBinaryDiagnostic;
 use AKlump\PhpSwap\Diagnostic\PhpBinaryTester;
-use AKlump\PhpSwap\Helper\ProviderService;
-use AKlump\PhpSwap\Provider\Homebrew;
-use AKlump\PhpSwap\Provider\Mamp;
+use AKlump\PhpSwap\Services;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,6 +15,13 @@ class DiagnoseCommand extends Command {
 
   protected static $defaultName = 'diagnose';
 
+  protected $config;
+
+  public function __construct(ConfigContainer $config) {
+    parent::__construct();
+    $this->config = $config;
+  }
+
   protected function configure() {
     $this->setDescription('Diagnose discovered PHP binaries and report binaries that cannot run.');
   }
@@ -24,10 +30,8 @@ class DiagnoseCommand extends Command {
     $output->writeln('PhpSwap diagnose');
     $output->writeln('');
 
-    if (!isset($phpswap_providers) || !($phpswap_providers instanceof \AKlump\PhpSwap\Provider\ProviderInterface)) {
-      $phpswap_providers = new ProviderService(new Homebrew(), new Mamp());
-    }
-    $versions = $phpswap_providers->listAll();
+    $providers = $this->config->get(Services::PROVIDER_SERVICE);
+    $versions = $providers->listAll();
 
     if (empty($versions)) {
       $output->writeln('<error>No PHP binaries discovered.</error>');
@@ -44,7 +48,7 @@ class DiagnoseCommand extends Command {
 
     foreach ($versions as $version) {
       try {
-        $bin_dir = $phpswap_providers->getBinary($version);
+        $bin_dir = $providers->getBinary($version);
         $binary = $bin_dir . '/php';
         $diagnostic = $tester->test($version, $binary);
       }

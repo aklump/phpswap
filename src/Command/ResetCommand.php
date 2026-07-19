@@ -3,6 +3,7 @@
 namespace AKlump\PhpSwap\Command;
 
 use AKlump\PhpSwap\Command\Handler\UnsetHandler;
+use AKlump\PhpSwap\ConfigContainer;
 use AKlump\PhpSwap\Shell\ShellActionJsonRenderer;
 use AKlump\PhpSwap\Shell\ShellActionList;
 use Symfony\Component\Console\Command\Command;
@@ -12,6 +13,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ResetCommand extends Command
 {
     protected static $defaultName = 'reset';
+
+    protected $config;
+
+    public function __construct(ConfigContainer $config) {
+        parent::__construct();
+        $this->config = $config;
+    }
 
     protected function configure()
     {

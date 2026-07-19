@@ -2,15 +2,24 @@
 
 namespace AKlump\PhpSwap\Command;
 
+use AKlump\PhpSwap\ConfigContainer;
 use AKlump\PhpSwap\Helper\GetPhpSwapFilePath;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class StatusCommand extends Command {
 
+  const NO_VALUE = '-';
+
   protected static $defaultName = 'status';
+
+  protected $config;
+
+  public function __construct(ConfigContainer $config) {
+    parent::__construct();
+    $this->config = $config;
+  }
 
   protected function configure() {
     $this->setDescription('Show PhpSwap-related state.');
@@ -30,13 +39,13 @@ class StatusCommand extends Command {
       $php_version = 'PHP ' . $matches[1];
     }
 
-    $swapped = getenv('PHPSWAP_ORIGINAL_PATH') ? 'yes' : 'no';
+    $swapped = getenv('PHPSWAP_ORIGINAL_PATH') ? 'yes' : StatusCommand::NO_VALUE;
 
     $getFilePath = new GetPhpSwapFilePath();
     $found_file = $getFilePath();
 
-    $saved = 'no';
-    $file_path = 'none';
+    $saved = StatusCommand::NO_VALUE;
+    $file_path = StatusCommand::NO_VALUE;
     if ($found_file) {
       $file_path = $found_file;
       $active_phpswap = getenv('PHPSWAP');
@@ -48,8 +57,6 @@ class StatusCommand extends Command {
       }
     }
 
-    $output->writeln('PhpSwap status');
-    $output->writeln('');
     $output->writeln(sprintf('%-8s %s', 'php:', $php_version));
     $output->writeln(sprintf('%-8s %s', 'binary:', $php_path));
     $output->writeln(sprintf('%-8s %s', 'swapped:', $swapped));

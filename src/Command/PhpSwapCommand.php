@@ -7,6 +7,7 @@ use AKlump\PhpSwap\Command\Handler\DeleteHandler;
 use AKlump\PhpSwap\Command\Handler\SaveHandler;
 use AKlump\PhpSwap\Command\Handler\SetHandler;
 use AKlump\PhpSwap\Command\Handler\UnsetHandler;
+use AKlump\PhpSwap\ConfigContainer;
 use AKlump\PhpSwap\Shell\ShellActionJsonRenderer;
 use AKlump\PhpSwap\Shell\ShellActionList;
 use Symfony\Component\Console\Command\Command;
@@ -17,6 +18,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 class PhpSwapCommand extends Command
 {
     protected static $defaultName = 'phpswap';
+
+    protected $config;
+
+    public function __construct(ConfigContainer $config) {
+        parent::__construct();
+        $this->config = $config;
+    }
 
     protected function configure()
     {
