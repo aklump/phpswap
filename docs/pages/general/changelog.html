@@ -4,9 +4,9 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="../../dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=0.0.15">
-      <link rel="stylesheet" href="../../dist/dist/bootstrap_theme.css?ver=0.0.15">
-      <link rel="stylesheet" href="../../dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=0.0.15">
+      <link rel="stylesheet" href="../../dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=0.0.16">
+      <link rel="stylesheet" href="../../dist/dist/bootstrap_theme.css?ver=0.0.16">
+      <link rel="stylesheet" href="../../dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=0.0.16">
         <title>Changelog | PhpSwap</title>
   </head>
 <body class="my-5">
@@ -46,12 +46,16 @@
 <p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>,
 and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
 <h2>[Unreleased]</h2>
+<h2>[0.0.16] - 2026-07-20</h2>
 <h3>Added</h3>
 <ul>
+<li>Added <code>supports</code> command to <code>phpswap_execute.php</code> to check for PHP version availability.</li>
 <li><code>phpswap diagnose</code> command to identify broken PHP binaries.</li>
 <li>Homebrew PHP provider.</li>
 <li>JSON shell-action contract for safe shell mutation.</li>
 <li><code>phpswap status --verbose</code> to show raw environment variables.</li>
+<li>Persistent caching of PHP provider discovery, making repeated <code>supports</code>/<code>using</code> calls fast. The cache self-invalidates when a PHP version is added, removed or upgraded.</li>
+<li><code>--flush</code> flag (usable with both <code>phpswap</code> and <code>phpswap_execute.php</code>) to clear the provider cache.</li>
 </ul>
 <h3>Changed</h3>
 <ul>
@@ -109,9 +113,9 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
   <footer class="footer d-flex justify-content-center">
     <div class="flex-column justify-content-center">
               Version:
-        <strong>0.0.15</strong>
+        <strong>0.0.16</strong>
         &bull;
-                    Last Update: <strong>7/19/2026</strong>
+                    Last Update: <strong>7/20/2026</strong>
           </div>
   </footer>
 
@@ -287,9 +291,9 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
   </div>
 </div>
 
-  <script src="../../dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=0.0.15"></script>
-  <script src="../../dist/lunr.js?ver=0.0.15"></script>
-  <script src="../../dist/knowledge.min.js?ver=0.0.15"></script>
+  <script src="../../dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=0.0.16"></script>
+  <script src="../../dist/lunr.js?ver=0.0.16"></script>
+  <script src="../../dist/knowledge.min.js?ver=0.0.16"></script>
 
 </body>
 </html>
