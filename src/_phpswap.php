@@ -44,7 +44,7 @@ if (($flush_key = array_search('--flush', $flush_argv, TRUE)) !== FALSE) {
 
 $app = new Application();
 $app->setName('phpswap');
-$app->setVersion('0.0.15');
+$app->setVersion('0.0.16');
 $app->add(new ShowCommand($providers));
 $app->add(new DiagnoseCommand($providers));
 $app->add(new StatusCommand());

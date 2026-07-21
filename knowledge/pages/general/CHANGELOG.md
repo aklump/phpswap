@@ -12,7 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.16] - 2026-07-20
+
 ### Added
+
 - Added `supports` command to `phpswap_execute.php` to check for PHP version availability.
 - `phpswap diagnose` command to identify broken PHP binaries.
 - Homebrew PHP provider.
@@ -22,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `--flush` flag (usable with both `phpswap` and `phpswap_execute.php`) to clear the provider cache.
 
 ### Changed
+
 - Complete rebuild of the CLI architecture around a central PHP controller and thin Bash adapter.
 - `phpswap --save` is now non-interactive and saves the currently active PHP version.
 - `phpswap status` now provides a cleaner, more concise summary.
@@ -30,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored `phpswap --delete` to always unset the session and restore default PHP.
 
 ### Removed
+
 - Legacy Bash-based command implementations in `phpswap.sh`.
 - Terminology: shim, persistent file.
 

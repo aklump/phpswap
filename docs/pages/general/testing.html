@@ -4,9 +4,9 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="../../dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=0.0.15">
-      <link rel="stylesheet" href="../../dist/dist/bootstrap_theme.css?ver=0.0.15">
-      <link rel="stylesheet" href="../../dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=0.0.15">
+      <link rel="stylesheet" href="../../dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=0.0.16">
+      <link rel="stylesheet" href="../../dist/dist/bootstrap_theme.css?ver=0.0.16">
+      <link rel="stylesheet" href="../../dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=0.0.16">
         <title>Multi-PHP Testing | PhpSwap</title>
   </head>
 <body class="my-5">
@@ -55,6 +55,22 @@
 <p>This allows you to verify that your project works correctly across all supported PHP versions without manually managing your <code>vendor</code> directory.</p>
 <h2>Using <code>phpswap_execute.php</code></h2>
 <p>For automated testing, you should use <code>phpswap_execute.php</code>. This is a lightweight front-controller designed to be called from test runner scripts.</p>
+<h3>Checking for Version Support</h3>
+<p>You can check if a specific PHP version is available on the system using the <code>supports</code> command. It will exit with <code>0</code> if the version is found, and <code>1</code> otherwise.</p>
+<pre><code class="bash">if ./phpswap_execute.php supports 8.2; then
+  ./phpswap_execute.php using 8.2 './vendor/bin/phpunit'
+fi
+</code></pre>
+<p>The results of PHP version discovery are cached, so repeated <code>supports</code> and
+<code>using</code> calls (for example, in a loop across many versions) are fast. The cache
+is invalidated automatically when a PHP version is installed, removed or
+upgraded. If you ever need to clear it manually, pass <code>--flush</code>:</p>
+<pre><code class="bash"># Clear the cache and exit.
+./phpswap_execute.php --flush
+
+# Clear the cache, then run the command with fresh discovery.
+./phpswap_execute.php --flush using 8.2 './vendor/bin/phpunit'
+</code></pre>
 <h3>Basic Usage</h3>
 <pre><code class="shell cript">phpswap_execute.php using 8.1 './vendor/bin/phpunit'
 </code></pre>
@@ -63,10 +79,10 @@
 <pre><code class="bash">#!/usr/bin/env bash
 
 # Use phpswap_execute.php to run tests across multiple versions
-./phpswap_execute.php using 7.4 './vendor/bin/phpunit'
-./phpswap_execute.php using 8.0 './vendor/bin/phpunit'
 ./phpswap_execute.php using 8.1 './vendor/bin/phpunit'
 ./phpswap_execute.php using 8.2 './vendor/bin/phpunit'
+./phpswap_execute.php using 8.3 './vendor/bin/phpunit'
+./phpswap_execute.php using 8.4 './vendor/bin/phpunit'
 </code></pre>
 <h2>Example: Boilerplate Test Runner</h2>
 <p>Below is a more robust example of a test runner script that includes error handling and verbosity.</p>
@@ -92,7 +108,7 @@ if [[ "${*}" == *'-v'* ]]; then
 fi
 
 # Run tests across multiple versions
-versions=("7.4" "8.0" "8.1" "8.2" "8.3" "8.4")
+versions=("8.1" "8.2" "8.3" "8.4")
 
 for version in "${versions[@]}"; do
   echo "Testing PHP $version..."
@@ -121,9 +137,9 @@ echo "All tests passed!"
   <footer class="footer d-flex justify-content-center">
     <div class="flex-column justify-content-center">
               Version:
-        <strong>0.0.15</strong>
+        <strong>0.0.16</strong>
         &bull;
-                    Last Update: <strong>7/19/2026</strong>
+                    Last Update: <strong>7/20/2026</strong>
           </div>
   </footer>
 
@@ -299,9 +315,9 @@ echo "All tests passed!"
   </div>
 </div>
 
-  <script src="../../dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=0.0.15"></script>
-  <script src="../../dist/lunr.js?ver=0.0.15"></script>
-  <script src="../../dist/knowledge.min.js?ver=0.0.15"></script>
+  <script src="../../dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=0.0.16"></script>
+  <script src="../../dist/lunr.js?ver=0.0.16"></script>
+  <script src="../../dist/knowledge.min.js?ver=0.0.16"></script>
 
 </body>
 </html>

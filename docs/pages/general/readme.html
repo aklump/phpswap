@@ -4,9 +4,9 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="../../dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=0.0.15">
-      <link rel="stylesheet" href="../../dist/dist/bootstrap_theme.css?ver=0.0.15">
-      <link rel="stylesheet" href="../../dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=0.0.15">
+      <link rel="stylesheet" href="../../dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=0.0.16">
+      <link rel="stylesheet" href="../../dist/dist/bootstrap_theme.css?ver=0.0.16">
+      <link rel="stylesheet" href="../../dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=0.0.16">
         <title>PhpSwap</title>
   </head>
 <body class="my-5">
@@ -71,6 +71,12 @@ phpswap --unset
 <pre><code class="bash">./phpswap_execute.php using 8.1 './vendor/bin/phpunit'
 </code></pre>
 <p>See <a href="testing.html">Multi-PHP Testing</a> for more details.</p>
+<h3>Checking for Version Support</h3>
+<p>You can check if a version is supported before running a command:</p>
+<pre><code class="bash">if ./phpswap_execute.php supports 8.1; then
+  ./phpswap_execute.php using 8.1 './vendor/bin/phpunit'
+fi
+</code></pre>
 <h2>What PHP Versions Are Supported?</h2>
 <p>To see the available versions, use the <code>show</code> command.</p>
 <pre><code class="bash">phpswap show
@@ -96,9 +102,9 @@ phpswap --unset
   <footer class="footer d-flex justify-content-center">
     <div class="flex-column justify-content-center">
               Version:
-        <strong>0.0.15</strong>
+        <strong>0.0.16</strong>
         &bull;
-                    Last Update: <strong>7/19/2026</strong>
+                    Last Update: <strong>7/20/2026</strong>
           </div>
   </footer>
 
@@ -273,9 +279,9 @@ phpswap --unset
   </div>
 </div>
 
-  <script src="../../dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=0.0.15"></script>
-  <script src="../../dist/lunr.js?ver=0.0.15"></script>
-  <script src="../../dist/knowledge.min.js?ver=0.0.15"></script>
+  <script src="../../dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=0.0.16"></script>
+  <script src="../../dist/lunr.js?ver=0.0.16"></script>
+  <script src="../../dist/knowledge.min.js?ver=0.0.16"></script>
 
 </body>
 </html>

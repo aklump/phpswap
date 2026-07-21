@@ -6,4 +6,4 @@ snippets:
     group: example
     source:
       - ./examples/*
-      - https://gist.githubusercontent.com/aklump/6ea661125646ae3ced37e86f10158adc/raw/run_multi_phpunit_tests.sh
+      - https://gist.githubusercontent.com/aklump/6ea661125646ae3ced37e86f10158adc/raw/run-multi-phpunit-tests.sh
