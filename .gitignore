@@ -2,6 +2,5 @@ vendor
 composer.lock
 .idea/
 /reports/
-todo.md
 /.phpswap-runtime
 phpswap.config.php
