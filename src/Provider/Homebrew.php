@@ -11,15 +11,41 @@ use UnexpectedValueException;
  *
  * @url https://brew.sh/
  */
-class Homebrew implements ProviderInterface {
+class Homebrew implements ProviderInterface, SourcePathsInterface {
 
   static $files;
+
+  /**
+   * Directory roots scanned to discover Homebrew-managed PHP binaries.
+   *
+   * @var string[]
+   */
+  private static $roots = array(
+    '/opt/homebrew/opt',
+    '/usr/local/opt',
+    '/opt/homebrew/Cellar',
+    '/usr/local/Cellar',
+  );
 
   /**
    * {@inheritdoc}
    */
   public function listAll() {
     return array_keys(self::getAvailablePhpDirectories());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSourcePaths() {
+    $paths = array();
+    foreach (self::$roots as $root) {
+      if (is_dir($root)) {
+        $paths[] = $root;
+      }
+    }
+
+    return $paths;
   }
 
   /**

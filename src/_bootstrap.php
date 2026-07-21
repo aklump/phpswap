@@ -1,6 +1,7 @@
 <?php
 
 use AKlump\PhpSwap\ConfigContainer;
+use AKlump\PhpSwap\Helper\ProviderService;
 use AKlump\PhpSwap\Provider\Homebrew;
 use AKlump\PhpSwap\Provider\Mamp;
 use AKlump\PhpSwap\Services;
@@ -17,6 +18,14 @@ if (file_exists($config_file)) {
 if (!$config->has(Services::PROVIDER_SERVICE)) {
   $config->addPhpProvider(new Homebrew());
   $config->addPhpProvider(new Mamp());
+}
+
+// Cache expensive provider discovery to disk so repeated invocations (e.g.
+// `phpswap_execute.php supports X` in a test loop) skip it. Use --flush to
+// clear the cache.
+$provider_service = $config->get(Services::PROVIDER_SERVICE);
+if ($provider_service instanceof ProviderService) {
+  $provider_service->enableCache();
 }
 
 return $config;

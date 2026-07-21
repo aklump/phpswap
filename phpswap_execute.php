@@ -47,12 +47,29 @@ if (($key = array_search('-v', $argv, TRUE)) !== FALSE) {
   $options |= Execute::VERBOSE;
 }
 
+$flush = FALSE;
+if (($key = array_search('--flush', $argv, TRUE)) !== FALSE) {
+  unset($argv[$key]);
+  $argv = array_values($argv);
+  $flush = TRUE;
+}
+
 if (isset($argv[0]) && strpos($argv[0], '--working-dir=') === 0) {
   $working_directory = substr(array_shift($argv), strlen('--working-dir='));
 }
 elseif (isset($argv[0]) && $argv[0] === '--working-dir') {
   array_shift($argv);
   $working_directory = array_shift($argv);
+}
+
+if ($flush) {
+  /** @var ConfigContainer $config */
+  $config = require __DIR__ . '/src/_bootstrap.php';
+  $config->get(Services::PROVIDER_SERVICE)->flushCache();
+  // When --flush is the only argument, clearing the cache is the whole job.
+  if (empty($argv)) {
+    exit(0);
+  }
 }
 
 if (isset($argv[0]) && $argv[0] === 'supports') {

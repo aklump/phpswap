@@ -33,6 +33,19 @@ if ./phpswap_execute.php supports 8.2; then
 fi
 ```
 
+The results of PHP version discovery are cached, so repeated `supports` and
+`using` calls (for example, in a loop across many versions) are fast. The cache
+is invalidated automatically when a PHP version is installed, removed or
+upgraded. If you ever need to clear it manually, pass `--flush`:
+
+```bash
+# Clear the cache and exit.
+./phpswap_execute.php --flush
+
+# Clear the cache, then run the command with fresh discovery.
+./phpswap_execute.php --flush using 8.2 './vendor/bin/phpunit'
+```
+
 ### Basic Usage
 
 ```shell script

@@ -11,7 +11,7 @@ use UnexpectedValueException;
  *
  * @url https://www.mamp.info/en/mamp/mac/
  */
-class Mamp implements ProviderInterface {
+class Mamp implements ProviderInterface, SourcePathsInterface {
 
   static $files;
 
@@ -20,6 +20,15 @@ class Mamp implements ProviderInterface {
    */
   public function listAll() {
     return array_keys(self::getAvailablePhpDirectories());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSourcePaths() {
+    $dir = '/Applications/MAMP/bin/php';
+
+    return is_dir($dir) ? array($dir) : array();
   }
 
   /**

@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Homebrew PHP provider.
 - JSON shell-action contract for safe shell mutation.
 - `phpswap status --verbose` to show raw environment variables.
+- Persistent caching of PHP provider discovery, making repeated `supports`/`using` calls fast. The cache self-invalidates when a PHP version is added, removed or upgraded.
+- `--flush` flag (usable with both `phpswap` and `phpswap_execute.php`) to clear the provider cache.
 
 ### Changed
 - Complete rebuild of the CLI architecture around a central PHP controller and thin Bash adapter.

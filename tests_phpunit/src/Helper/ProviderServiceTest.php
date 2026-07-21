@@ -42,6 +42,7 @@ class ProviderServiceTest extends TestCase {
 
   public function testGetBinarySupportsFuzzyMatchingViaProvider() {
     $provider = $this->createMock(ProviderInterface::class);
+    $provider->method('listAll')->willReturn(['8']);
     $provider->method('getBinary')->with('8')->willReturn('/path/to/php8.x');
 
     $providers = new ProviderService($provider);
@@ -81,5 +82,108 @@ class ProviderServiceTest extends TestCase {
     $this->assertEquals(['8.3.24', '8.2.29'], $providers->listAll());
     $this->assertEquals('/opt/homebrew/opt/php@8.3/bin', $providers->getBinary('8.3.24'));
     $this->assertEquals('/Applications/MAMP/bin/php/php8.2.29/bin', $providers->getBinary('8.2.29'));
+  }
+
+  public function testWarmCacheAvoidsQueryingProvidersAgain() {
+    $file = sys_get_temp_dir() . '/phpswap-test-' . uniqid() . '.json';
+    @unlink($file);
+
+    // First service populates the cache from its provider.
+    $writer = $this->createMock(ProviderInterface::class);
+    $writer->method('listAll')->willReturn(['8.3.24']);
+    $writer->method('getBinary')->willReturn('/opt/php83/bin');
+    $svc1 = (new ProviderService($writer))->setCacheFile($file);
+    $this->assertEquals(['8.3.24'], $svc1->listAll());
+    $this->assertFileExists($file);
+
+    // A second service reading the same warm cache must never query providers.
+    $reader = $this->createMock(ProviderInterface::class);
+    $reader->expects($this->never())->method('listAll');
+    $reader->expects($this->never())->method('getBinary');
+    $svc2 = (new ProviderService($reader))->setCacheFile($file);
+    $this->assertEquals(['8.3.24'], $svc2->listAll());
+    $this->assertEquals('/opt/php83/bin', $svc2->getBinary('8.3'));
+
+    @unlink($file);
+  }
+
+  public function testFlushCacheRemovesTheCacheFile() {
+    $file = sys_get_temp_dir() . '/phpswap-test-' . uniqid() . '.json';
+    @unlink($file);
+
+    $provider = $this->createMock(ProviderInterface::class);
+    $provider->method('listAll')->willReturn(['8.3.24']);
+    $provider->method('getBinary')->willReturn('/opt/php83/bin');
+    $svc = (new ProviderService($provider))->setCacheFile($file);
+    $svc->listAll();
+    $this->assertFileExists($file);
+
+    $svc->flushCache();
+    $this->assertFileDoesNotExist($file);
+  }
+
+  public function testCacheInvalidatesWhenSourcePathChanges() {
+    $source_dir = sys_get_temp_dir() . '/phpswap-src-' . uniqid();
+    mkdir($source_dir);
+    $file = sys_get_temp_dir() . '/phpswap-test-' . uniqid() . '.json';
+    @unlink($file);
+
+    // A source-aware provider counts how many times discovery runs.
+    $makeProvider = function () use ($source_dir) {
+      $provider = new CountingSourceProvider($source_dir);
+
+      return $provider;
+    };
+
+    $p1 = $makeProvider();
+    $svc1 = (new ProviderService($p1))->setCacheFile($file);
+    $svc1->listAll();
+    $this->assertSame(1, $p1->listAllCalls, 'Cold cache queries the provider.');
+
+    // Same source state: a fresh service should hit the warm cache.
+    $p2 = $makeProvider();
+    $svc2 = (new ProviderService($p2))->setCacheFile($file);
+    $svc2->listAll();
+    $this->assertSame(0, $p2->listAllCalls, 'Warm cache skips the provider.');
+
+    // Change the source directory's mtime to simulate an install/removal.
+    touch($source_dir, time() + 120);
+    clearstatcache();
+
+    $p3 = $makeProvider();
+    $svc3 = (new ProviderService($p3))->setCacheFile($file);
+    $svc3->listAll();
+    $this->assertSame(1, $p3->listAllCalls, 'Changed source invalidates the cache.');
+
+    @unlink($file);
+    rmdir($source_dir);
+  }
+}
+
+/**
+ * Test double: a provider that declares a source path and counts discovery.
+ */
+class CountingSourceProvider implements ProviderInterface, \AKlump\PhpSwap\Provider\SourcePathsInterface {
+
+  public $listAllCalls = 0;
+
+  private $sourceDir;
+
+  public function __construct($sourceDir) {
+    $this->sourceDir = $sourceDir;
+  }
+
+  public function listAll() {
+    $this->listAllCalls++;
+
+    return ['8.3.24'];
+  }
+
+  public function getBinary($version) {
+    return '/opt/php83/bin';
+  }
+
+  public function getSourcePaths() {
+    return [$this->sourceDir];
   }
 }
