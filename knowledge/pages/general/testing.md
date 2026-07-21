@@ -23,6 +23,16 @@ This allows you to verify that your project works correctly across all supported
 
 For automated testing, you should use `phpswap_execute.php`. This is a lightweight front-controller designed to be called from test runner scripts.
 
+### Checking for Version Support
+
+You can check if a specific PHP version is available on the system using the `supports` command. It will exit with `0` if the version is found, and `1` otherwise.
+
+```bash
+if ./phpswap_execute.php supports 8.2; then
+  ./phpswap_execute.php using 8.2 './vendor/bin/phpunit'
+fi
+```
+
 ### Basic Usage
 
 ```shell script
@@ -37,10 +47,10 @@ You can create a script to run your tests across multiple versions.
 #!/usr/bin/env bash
 
 # Use phpswap_execute.php to run tests across multiple versions
-./phpswap_execute.php using 7.4 './vendor/bin/phpunit'
-./phpswap_execute.php using 8.0 './vendor/bin/phpunit'
 ./phpswap_execute.php using 8.1 './vendor/bin/phpunit'
 ./phpswap_execute.php using 8.2 './vendor/bin/phpunit'
+./phpswap_execute.php using 8.3 './vendor/bin/phpunit'
+./phpswap_execute.php using 8.4 './vendor/bin/phpunit'
 ```
 
 ## Example: Boilerplate Test Runner
@@ -70,7 +80,7 @@ if [[ "${*}" == *'-v'* ]]; then
 fi
 
 # Run tests across multiple versions
-versions=("7.4" "8.0" "8.1" "8.2" "8.3" "8.4")
+versions=("8.1" "8.2" "8.3" "8.4")
 
 for version in "${versions[@]}"; do
   echo "Testing PHP $version..."

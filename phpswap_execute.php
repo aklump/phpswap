@@ -55,6 +55,27 @@ elseif (isset($argv[0]) && $argv[0] === '--working-dir') {
   $working_directory = array_shift($argv);
 }
 
+if (isset($argv[0]) && $argv[0] === 'supports') {
+  array_shift($argv);
+  $version = isset($argv[0]) ? array_shift($argv) : NULL;
+  if (!$version) {
+    fwrite(STDERR, "Usage: phpswap_execute.php supports VERSION\n");
+
+    exit(1);
+  }
+  try {
+    /** @var ConfigContainer $config */
+    $config = require __DIR__ . '/src/_bootstrap.php';
+    $providers = $config->get(Services::PROVIDER_SERVICE);
+    $providers->getBinary($version);
+
+    exit(0);
+  }
+  catch (Exception $exception) {
+    exit(1);
+  }
+}
+
 if (isset($argv[0]) && ($argv[0] === 'using' || $argv[0] === 'use')) {
   array_shift($argv);
 }
@@ -82,11 +103,7 @@ try {
   $php_binary = $providers->getBinary($version);
 
   $execute = new Execute(new Bash(), $php_binary, $options);
-  $lines = $execute($working_directory, $executable);
-
-  if ($lines) {
-    fwrite(STDOUT, implode(PHP_EOL, $lines) . PHP_EOL);
-  }
+  $execute($working_directory, $executable);
 }
 catch (Exception $exception) {
   fwrite(STDERR, $exception->getMessage() . PHP_EOL);

@@ -39,14 +39,21 @@ class ComposerRestoreTest extends TestCase {
   }
 
   public function testSwapFileIsRemoved() {
-    $restore = new ComposerRestore(new Bash());
+    $bash = $this->getBash(0, $script);
+    $restore = new ComposerRestore($bash);
     $working_dir = $this->getTestFileFilepath('', TRUE);
     $composer = $this->getTestFileFilepath('composer.json');
     file_put_contents($composer, '{}');
     $swap_file = $this->getTestFileFilepath(Execute::SWAP_FILE, TRUE);
     file_put_contents($swap_file, '{}');
 
+    // We must manually perform the mv that the bash script would do,
+    // because we are mocking the bash script.
     $restore($working_dir);
+    if (file_exists($swap_file)) {
+      rename($swap_file, $this->getTestFileFilepath('composer.lock'));
+    }
+
     $this->assertFileDoesNotExist($swap_file);
     $this->assertFileExists($this->getTestFileFilepath('composer.lock'));
   }

@@ -46,6 +46,16 @@ One of PhpSwap's most powerful features is the ability to test your project agai
 
 See [Multi-PHP Testing](@testing) for more details.
 
+### Checking for Version Support
+
+You can check if a version is supported before running a command:
+
+```bash
+if ./phpswap_execute.php supports 8.1; then
+  ./phpswap_execute.php using 8.1 './vendor/bin/phpunit'
+fi
+```
+
 ## What PHP Versions Are Supported?
 
 To see the available versions, use the `show` command.

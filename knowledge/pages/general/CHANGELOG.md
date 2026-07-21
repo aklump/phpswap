@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `supports` command to `phpswap_execute.php` to check for PHP version availability.
 - `phpswap diagnose` command to identify broken PHP binaries.
 - Homebrew PHP provider.
 - JSON shell-action contract for safe shell mutation.
